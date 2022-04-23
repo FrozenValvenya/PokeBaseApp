@@ -1,8 +1,8 @@
 def renameConfig = [
         templateName  : "template",
         templateAppId : "template.app.id",
-        newPackage    : "domain.yourname.app",
-        newProjectName: "Your Project",
+        newPackage    : "ru.frozenpriest.pokebase",
+        newProjectName: "PokeBase app",
 ]
 
 task renameAppPackage(type: Copy) {
