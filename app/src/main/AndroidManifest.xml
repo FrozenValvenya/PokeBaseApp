@@ -8,11 +8,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name=".PokeBaseApp"
+        android:name=".presentation.PokeBaseApp"
         android:theme="@style/Theme.AppTheme">
 
         <activity
-            android:name="ru.frozenpriest.pokebase.MainActivity"
+            android:name="ru.frozenpriest.pokebase.presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppTheme.NoActionBar">
             <intent-filter>

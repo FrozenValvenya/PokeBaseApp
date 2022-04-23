@@ -1,4 +1,4 @@
-package ru.frozenpriest.pokebase.theme
+package ru.frozenpriest.pokebase.presentation.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
