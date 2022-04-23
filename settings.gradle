@@ -7,3 +7,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "PokeBase app"
 include ':app'
+include ':data'
+include ':domain'
+include ':module_injector'

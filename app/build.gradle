@@ -1,6 +1,7 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
+    id "kotlin-kapt"
 }
 
 android {
@@ -38,7 +39,6 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion rootProject.ext.versions.compose
-        kotlinCompilerVersion kotlinVersion
     }
     packagingOptions {
         resources {
@@ -62,4 +62,8 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.ext.versions.espresso"
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$rootProject.ext.versions.compose"
     debugImplementation "androidx.compose.ui:ui-tooling:$rootProject.ext.versions.compose"
+
+    // DI
+    api "com.google.dagger:dagger:$rootProject.ext.versions.dagger"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.ext.versions.dagger"
 }
