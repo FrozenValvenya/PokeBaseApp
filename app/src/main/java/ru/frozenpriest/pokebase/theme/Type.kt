@@ -1,4 +1,4 @@
-package template.theme
+package ru.frozenpriest.pokebase.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

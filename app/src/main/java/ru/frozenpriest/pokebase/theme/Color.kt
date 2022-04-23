@@ -1,6 +1,6 @@
 @file:Suppress("MagicNumber")
 
-package template.theme
+package ru.frozenpriest.pokebase.theme
 
 import androidx.compose.ui.graphics.Color
 
