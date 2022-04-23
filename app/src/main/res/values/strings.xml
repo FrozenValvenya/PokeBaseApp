@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">PokeBase app</string>
+    <string name="species">Species</string>
+    <string name="height">Height</string>
+    <string name="weight">Weight</string>
+    <string name="about">About</string>
+    <string name="base_stats">Base Stats</string>
+    <string name="evolution">Evolution</string>
+    <string name="moves">Moves</string>
 </resources>
