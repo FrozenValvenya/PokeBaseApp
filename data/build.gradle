@@ -43,4 +43,7 @@ dependencies {
     // DI
     api "com.google.dagger:dagger:$rootProject.ext.versions.dagger"
     kapt "com.google.dagger:dagger-compiler:$rootProject.ext.versions.dagger"
+
+    //log
+    api "com.jakewharton.timber:timber:$rootProject.ext.versions.timber"
 }

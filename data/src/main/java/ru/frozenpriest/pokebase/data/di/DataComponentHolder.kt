@@ -1,5 +1,6 @@
 package ru.frozenpriest.pokebase.data.di
 
+import android.app.Application
 import ru.frozenpriest.pokebase.module_injector.BaseFeatureAPI
 import ru.frozenpriest.pokebase.module_injector.BaseFeatureDependencies
 import ru.frozenpriest.pokebase.module_injector.ComponentHolder
@@ -20,6 +21,8 @@ object DataComponentHolder : ComponentHolder<DataFeatureApi, DataFeatureDependen
     override fun get(): DataFeatureApi = componentHolderDelegate.get()
 }
 
-interface DataFeatureDependencies : BaseFeatureDependencies
+interface DataFeatureDependencies : BaseFeatureDependencies {
+    val application: Application
+}
 
 interface DataFeatureApi : BaseFeatureAPI
