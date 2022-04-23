@@ -1,4 +1,4 @@
-package ru.frozenpriest.pokebase.module_injector
+package ru.frozenpriest.pokebase.injector
 
 interface BaseFeatureDependencies {
     val dependencyHolder: BaseDependencyHolder<out BaseFeatureDependencies>

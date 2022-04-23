@@ -1,9 +1,9 @@
 package ru.frozenpriest.pokebase.domain.di
 
-import ru.frozenpriest.pokebase.module_injector.BaseFeatureAPI
-import ru.frozenpriest.pokebase.module_injector.BaseFeatureDependencies
-import ru.frozenpriest.pokebase.module_injector.ComponentHolder
-import ru.frozenpriest.pokebase.module_injector.ComponentHolderDelegate
+import ru.frozenpriest.pokebase.injector.BaseFeatureAPI
+import ru.frozenpriest.pokebase.injector.BaseFeatureDependencies
+import ru.frozenpriest.pokebase.injector.ComponentHolder
+import ru.frozenpriest.pokebase.injector.ComponentHolderDelegate
 
 object DomainComponentHolder : ComponentHolder<DomainFeatureApi, DomainFeatureDependencies> {
     private val componentHolderDelegate = ComponentHolderDelegate<

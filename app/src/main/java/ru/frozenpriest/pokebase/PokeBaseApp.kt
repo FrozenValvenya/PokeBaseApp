@@ -9,12 +9,13 @@ import ru.frozenpriest.pokebase.di.AppFeatureDependencies
 import ru.frozenpriest.pokebase.domain.di.DomainComponentHolder
 import ru.frozenpriest.pokebase.domain.di.DomainFeatureApi
 import ru.frozenpriest.pokebase.domain.di.DomainFeatureDependencies
-import ru.frozenpriest.pokebase.module_injector.BaseDependencyHolder
-import ru.frozenpriest.pokebase.module_injector.BaseFeatureDependencies
-import ru.frozenpriest.pokebase.module_injector.DependencyHolder0
-import ru.frozenpriest.pokebase.module_injector.DependencyHolder1
+import ru.frozenpriest.pokebase.injector.BaseDependencyHolder
+import ru.frozenpriest.pokebase.injector.BaseFeatureDependencies
+import ru.frozenpriest.pokebase.injector.DependencyHolder0
+import ru.frozenpriest.pokebase.injector.DependencyHolder1
 import timber.log.Timber
 
+@Suppress("MaxLineLength")
 class PokeBaseApp : Application() {
     override fun onCreate() {
         super.onCreate()

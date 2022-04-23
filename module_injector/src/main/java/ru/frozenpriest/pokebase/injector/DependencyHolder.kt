@@ -1,5 +1,6 @@
-package ru.frozenpriest.pokebase.module_injector
+package ru.frozenpriest.pokebase.injector
 
+@Suppress("MaxLineLength")
 interface BaseDependencyHolder<D : BaseFeatureDependencies> {
     val dependencies: D
 }
@@ -30,6 +31,7 @@ abstract class DependencyHolder2<A1 : BaseFeatureAPI, A2 : BaseFeatureAPI, D : B
         get() = block(this, api1, api2)
 }
 
+@Suppress("MaxLineLength")
 abstract class DependencyHolder3<A1 : BaseFeatureAPI, A2 : BaseFeatureAPI, A3 : BaseFeatureAPI, D : BaseFeatureDependencies>(
     private val api1: A1,
     private val api2: A2,

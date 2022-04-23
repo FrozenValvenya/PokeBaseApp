@@ -1,7 +1,8 @@
-package ru.frozenpriest.pokebase.module_injector
+package ru.frozenpriest.pokebase.injector
 
 import java.lang.ref.WeakReference
 
+@Suppress("MaxLineLength")
 class ComponentHolderDelegate<A : BaseFeatureAPI, D : BaseFeatureDependencies, C : A>(
     private val componentFactory: (D) -> C
 ) : ComponentHolder<A, D> {
