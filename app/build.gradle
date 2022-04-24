@@ -66,6 +66,8 @@ dependencies {
     implementation "com.google.accompanist:accompanist-pager-indicators:0.19.0"
     implementation "androidx.compose.runtime:runtime-livedata:$rootProject.ext.versions.compose"
 
+    implementation 'androidx.palette:palette-ktx:1.0.0'
+
     testImplementation "junit:junit:$rootProject.ext.versions.junit"
     androidTestImplementation "androidx.test.ext:junit:$rootProject.ext.versions.androidxTest"
     androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.ext.versions.espresso"
@@ -78,4 +80,8 @@ dependencies {
 
     //log
     api "com.jakewharton.timber:timber:$rootProject.ext.versions.timber"
+
+    implementation("io.coil-kt:coil:2.0.0-rc03")
+    implementation("io.coil-kt:coil-compose:2.0.0-rc03")
+
 }

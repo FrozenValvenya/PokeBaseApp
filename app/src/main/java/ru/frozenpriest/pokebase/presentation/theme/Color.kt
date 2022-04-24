@@ -13,3 +13,7 @@ val GrayText = Color(0xFF5F5F5F)
 val BlackText = Color.Black
 
 val BlackTextTransparent = Color(0x52000000)
+
+val StatBackground = Color(247, 247, 247)
+val StatBad = Color(202, 146, 146)
+val StatGood = Color(136, 186, 149)

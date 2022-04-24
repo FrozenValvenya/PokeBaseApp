@@ -1,8 +1,17 @@
 package ru.frozenpriest.pokebase.presentation.screens.pokemon.details
 
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.palette.graphics.Palette
+import ru.frozenpriest.pokebase.domain.model.Pokemon
+import ru.frozenpriest.pokebase.domain.model.Species
+import ru.frozenpriest.pokebase.domain.model.Stat
+import timber.log.Timber
 import javax.inject.Inject
 
 class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
@@ -11,33 +20,34 @@ class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
 
     init {
         _selectedPokemon.value = Pokemon(
+            image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
             name = "Poke",
-            species = "Seed",
+            species = Species(
+                name = "Bulbasaur",
+                hp = Stat.makeHP(85),
+                attack = Stat.makeAttack(10),
+                defence = Stat.makeDefence(20),
+                spAttack = Stat.makeSpAttack(20),
+                spDefence = Stat.makeSpDefence(20),
+                speed = Stat.makeSpeed(20),
+                types = listOf("Grass", "Poison"),
+            ),
             level = 5,
-            hp = 24,
-            attack = 10,
-            defence = 20,
-            spAttack = 20,
-            spDefence = 20,
-            speed = 20,
-            types = listOf("Grass", "Poison"),
             height = 70,
             weight = 6.9f,
         )
     }
-}
 
-data class Pokemon(
-    val name: String,
-    val species: String,
-    val level: Int,
-    val hp: Int,
-    val attack: Int,
-    val defence: Int,
-    val spAttack: Int,
-    val spDefence: Int,
-    val speed: Int,
-    val types: List<String>,
-    val height: Int,
-    val weight: Float,
-)
+    fun calculateDominantColor(drawable: Drawable, onFinish: (Color) -> Unit) {
+        val bitmap = (drawable as BitmapDrawable).bitmap.copy(
+            Bitmap.Config.ARGB_8888,
+            true
+        )
+        Palette.from(bitmap).generate { palette ->
+            palette?.dominantSwatch?.let {
+                onFinish(Color(it.rgb))
+                Timber.i("Vibrant color should be ready $it")
+            }
+        }
+    }
+}

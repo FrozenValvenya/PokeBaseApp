@@ -29,9 +29,10 @@ class MainActivity : ComponentActivity() {
                     val component = AppComponentHolder.getComponent()
 
                     composable(NavigationDestination.PokemonDetails.destination) {
-                        val viewModel: PokemonDetailsViewModel = daggerViewModel(factory = component.getFactory())
+                        val viewModel: PokemonDetailsViewModel =
+                            daggerViewModel(factory = component.getFactory())
 
-                        PokemonDetailsScreen(viewModel = viewModel)
+                        PokemonDetailsScreen(viewModel = viewModel, navController = navController)
                     }
                 }
             }

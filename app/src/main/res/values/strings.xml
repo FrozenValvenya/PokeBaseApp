@@ -7,4 +7,7 @@
     <string name="base_stats">Base Stats</string>
     <string name="evolution">Evolution</string>
     <string name="moves">Moves</string>
+    <string name="hp">HP</string>
+    <string name="back">back</string>
+    <string name="add_to_fav">Add to favorite</string>
 </resources>
