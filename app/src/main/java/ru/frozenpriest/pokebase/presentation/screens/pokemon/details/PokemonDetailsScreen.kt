@@ -42,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -63,6 +64,7 @@ import ru.frozenpriest.pokebase.domain.model.Pokemon
 import ru.frozenpriest.pokebase.domain.model.getStats
 import ru.frozenpriest.pokebase.presentation.common.IntStatRow
 import ru.frozenpriest.pokebase.presentation.common.TextRow
+import ru.frozenpriest.pokebase.presentation.common.blackOrWhiteContentColor
 import ru.frozenpriest.pokebase.presentation.common.getPokemonTypeColor
 import ru.frozenpriest.pokebase.presentation.theme.BlackText
 import ru.frozenpriest.pokebase.presentation.theme.BlackTextTransparent
@@ -115,7 +117,8 @@ private fun DetailsContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.TopCenter),
-            pokemon
+            pokemon,
+            dominantColor
         )
         Image(
             painter = painterResource(id = R.drawable.pokeball_icon),
@@ -125,7 +128,8 @@ private fun DetailsContent(
                 .align(Alignment.CenterEnd)
                 .offset(y = (-100).dp),
             alignment = Alignment.BottomEnd,
-            alpha = 0.1f
+            alpha = 0.1f,
+            colorFilter = ColorFilter.tint(blackOrWhiteContentColor(background = dominantColor))
         )
         PokemonSheetWithImage(pokemon, pokemonDrawable)
     }
@@ -173,7 +177,7 @@ private fun DetailsTopBar(
                 contentDescription = stringResource(
                     id = R.string.back
                 ),
-                tint = Color.White
+                tint = blackOrWhiteContentColor(dominantColor)
             )
         }
         IconButton(onClick = { /*mark as favorite(dont know if this will be impl*/ }) {
@@ -182,24 +186,24 @@ private fun DetailsTopBar(
                 contentDescription = stringResource(
                     id = R.string.add_to_fav
                 ),
-                tint = Color.White
+                tint = blackOrWhiteContentColor(dominantColor)
             )
         }
     }
 }
 
 @Composable
-fun PokemonNameAndTypes(modifier: Modifier, pokemon: Pokemon) {
+fun PokemonNameAndTypes(modifier: Modifier, pokemon: Pokemon, dominantColor: Color) {
     Column(modifier = modifier.padding(horizontal = 16.dp)) {
         Text(
             text = pokemon.name,
             style = MaterialTheme.typography.h1,
-            color = Color.White
+            color = blackOrWhiteContentColor(dominantColor)
         )
         Text(
             text = pokemon.species.name,
             style = MaterialTheme.typography.h2,
-            color = Color.White
+            color = blackOrWhiteContentColor(dominantColor)
         )
         Spacer(modifier = Modifier.height(8.dp))
         LazyRow(
