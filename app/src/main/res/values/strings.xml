@@ -10,4 +10,5 @@
     <string name="hp">HP</string>
     <string name="back">back</string>
     <string name="add_to_fav">Add to favorite</string>
+    <string name="possible_evolution">Possible evolution - %1$s</string>
 </resources>

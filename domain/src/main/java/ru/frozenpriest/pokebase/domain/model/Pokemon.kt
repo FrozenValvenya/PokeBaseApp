@@ -6,18 +6,19 @@ data class Pokemon(
     val species: Species,
     val height: Int,
     val weight: Float,
-    val image: String
 )
 
 data class Species(
     val name: String,
+    val image: String,
     val hp: Stat,
     val attack: Stat,
     val defence: Stat,
     val spAttack: Stat,
     val spDefence: Stat,
     val speed: Stat,
-    val types: List<String>
+    val types: List<String>,
+    val possibleEvolutions: List<Species>
 )
 
 fun Species.getStats(): List<Stat> {

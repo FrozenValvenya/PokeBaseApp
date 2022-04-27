@@ -19,8 +19,19 @@ class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
     val selectedPokemon: LiveData<Pokemon> get() = _selectedPokemon
 
     init {
-        _selectedPokemon.value = Pokemon(
+        val bulba = Species(
+            name = "Bulbasaur",
+            hp = Stat.makeHP(85),
+            attack = Stat.makeAttack(10),
+            defence = Stat.makeDefence(20),
+            spAttack = Stat.makeSpAttack(20),
+            spDefence = Stat.makeSpDefence(20),
+            speed = Stat.makeSpeed(20),
+            types = listOf("Grass", "Poison"),
+            possibleEvolutions = listOf(),
             image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
+        )
+        _selectedPokemon.value = Pokemon(
             name = "Poke",
             species = Species(
                 name = "Bulbasaur",
@@ -31,6 +42,8 @@ class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
                 spDefence = Stat.makeSpDefence(20),
                 speed = Stat.makeSpeed(20),
                 types = listOf("Grass", "Poison"),
+                possibleEvolutions = listOf(bulba, bulba, bulba, bulba, bulba, bulba, bulba, bulba, bulba, bulba),
+                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
             ),
             level = 5,
             height = 70,

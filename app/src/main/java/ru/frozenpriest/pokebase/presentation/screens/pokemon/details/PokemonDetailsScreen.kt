@@ -1,8 +1,9 @@
-@file:OptIn(ExperimentalPagerApi::class)
+@file:OptIn(ExperimentalPagerApi::class, ExperimentalFoundationApi::class)
 
 package ru.frozenpriest.pokebase.presentation.screens.pokemon.details
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +18,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -51,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -81,7 +85,7 @@ fun PokemonDetailsScreen(viewModel: PokemonDetailsViewModel, navController: NavC
         val pokemonDrawable =
             rememberAsyncImagePainter(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(pokemon.image)
+                    .data(pokemon.species.image)
                     .crossfade(true)
                     .build(),
                 onSuccess = { state ->
@@ -274,6 +278,38 @@ private fun PokemonStatsPager(pokemon: Pokemon) {
                 1 -> {
                     StatsPokemon(pokemon = pokemon)
                 }
+                2 -> {
+                    EvolutionPokemon(pokemon = pokemon)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun EvolutionPokemon(pokemon: Pokemon) {
+    LazyVerticalGrid(
+        cells = GridCells.Adaptive(100.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
+        modifier = Modifier.padding(8.dp)
+    ) {
+        items(pokemon.species.possibleEvolutions) { evolution ->
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(evolution.image)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = stringResource(
+                        id = R.string.possible_evolution,
+                        evolution.name
+                    )
+                )
+                Text(text = evolution.name)
             }
         }
     }
