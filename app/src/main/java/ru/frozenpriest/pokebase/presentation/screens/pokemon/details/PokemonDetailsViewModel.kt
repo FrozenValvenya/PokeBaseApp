@@ -63,7 +63,7 @@ class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
             height = 70,
             weight = 6.9f,
             moves = listOf(
-                Move("LUL", Type.Poison, Category.Status, 999999, 1.0f, 999),
+                Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
                 Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
                 Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33)
             )

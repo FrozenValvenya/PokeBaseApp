@@ -18,14 +18,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -51,14 +47,11 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -66,12 +59,10 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import ru.frozenpriest.pokebase.R
 import ru.frozenpriest.pokebase.domain.model.Pokemon
-import ru.frozenpriest.pokebase.domain.model.getStats
-import ru.frozenpriest.pokebase.presentation.common.IntStatRow
-import ru.frozenpriest.pokebase.presentation.common.TextRow
 import ru.frozenpriest.pokebase.presentation.common.blackOrWhiteContentColor
 import ru.frozenpriest.pokebase.presentation.common.getColor
 import ru.frozenpriest.pokebase.presentation.theme.BlackText
@@ -256,23 +247,7 @@ private fun PokemonStatsPager(pokemon: Pokemon) {
             selectedTabIndex = pagerState.currentPage,
             backgroundColor = MaterialTheme.colors.surface
         ) {
-            tabNames.forEachIndexed { index, nameId ->
-                Tab(
-                    selected = pagerState.currentPage == index,
-                    onClick = {
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(index)
-                        }
-                    },
-                    text = {
-                        Text(
-                            text = stringResource(id = nameId),
-                            fontSize = 12.sp,
-                            color = getTabTextColor(index, pagerState)
-                        )
-                    }
-                )
-            }
+            Tabs(tabNames, pagerState, coroutineScope)
         }
         HorizontalPager(count = tabNames.size, state = pagerState) { page ->
             when (page) {
@@ -294,109 +269,27 @@ private fun PokemonStatsPager(pokemon: Pokemon) {
 }
 
 @Composable
-fun MovesPokemon(pokemon: Pokemon) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        item {
-            Row(
-                Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
+private fun Tabs(
+    tabNames: List<Int>,
+    pagerState: PagerState,
+    coroutineScope: CoroutineScope
+) {
+    tabNames.forEachIndexed { index, nameId ->
+        Tab(
+            selected = pagerState.currentPage == index,
+            onClick = {
+                coroutineScope.launch {
+                    pagerState.animateScrollToPage(index)
+                }
+            },
+            text = {
                 Text(
-                    text = stringResource(id = R.string.move_name),
-                    Modifier.weight(1.5f),
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = stringResource(id = R.string.move_type),
-                    Modifier.weight(1f),
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = stringResource(id = R.string.move_category),
-                    Modifier.weight(1f),
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = stringResource(id = R.string.move_power),
-                    Modifier.weight(1f),
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = stringResource(id = R.string.move_accuracy),
-                    Modifier.weight(1f),
-                    fontWeight = FontWeight.Bold
+                    text = stringResource(id = nameId),
+                    fontSize = 12.sp,
+                    color = getTabTextColor(index, pagerState)
                 )
             }
-        }
-        item {
-            Divider(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp)
-            )
-        }
-        items(pokemon.moves) { move ->
-            Row(
-                Modifier.fillMaxWidth().padding(vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Text(
-                    text = move.name,
-                    Modifier.weight(1.5f),
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = move.type.typeName,
-                    Modifier.weight(1f),
-                    color = move.type.getColor()
-                )
-                Text(
-                    text = move.category.name,
-                    Modifier.weight(1f),
-                    color = move.category.getColor()
-
-                )
-                Text(
-                    text = move.power.toString(),
-                    Modifier.weight(1f)
-                )
-                Text(
-                    text = (move.accuracy * 100).toInt().toString() + " %",
-                    Modifier.weight(1f)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun EvolutionPokemon(pokemon: Pokemon) {
-    LazyVerticalGrid(
-        cells = GridCells.Adaptive(100.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
-        modifier = Modifier.padding(8.dp)
-    ) {
-        items(pokemon.species.possibleEvolutions) { evolution ->
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(evolution.image)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = stringResource(
-                        id = R.string.possible_evolution,
-                        evolution.name
-                    )
-                )
-                Text(text = evolution.name)
-            }
-        }
+        )
     }
 }
 
@@ -405,47 +298,6 @@ private fun getTabTextColor(
     index: Int,
     pagerState: PagerState
 ) = if (index == pagerState.currentPage) BlackText else BlackTextTransparent
-
-@Composable
-fun AboutPokemon(pokemon: Pokemon) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-            .padding(top = 32.dp)
-            .background(
-                color = MaterialTheme.colors.surface
-            ),
-        verticalArrangement = Arrangement.Top
-    ) {
-        TextRow(
-            name = stringResource(id = R.string.height),
-            value = pokemon.height.toString()
-        )
-        TextRow(
-            name = stringResource(id = R.string.weight),
-            value = pokemon.weight.toString()
-        )
-    }
-}
-
-@Composable
-fun StatsPokemon(pokemon: Pokemon) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-            .padding(top = 32.dp)
-            .background(
-                color = MaterialTheme.colors.surface
-            ),
-        verticalArrangement = Arrangement.Top,
-    ) {
-        pokemon.species.getStats().forEach { stat ->
-            IntStatRow(stat = stat, limit = 100) // later should be changed maybe
-        }
-    }
-}
 
 @Preview
 @Composable
