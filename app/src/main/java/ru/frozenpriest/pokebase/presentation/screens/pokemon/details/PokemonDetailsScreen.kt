@@ -19,11 +19,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -49,6 +51,8 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -69,7 +73,7 @@ import ru.frozenpriest.pokebase.domain.model.getStats
 import ru.frozenpriest.pokebase.presentation.common.IntStatRow
 import ru.frozenpriest.pokebase.presentation.common.TextRow
 import ru.frozenpriest.pokebase.presentation.common.blackOrWhiteContentColor
-import ru.frozenpriest.pokebase.presentation.common.getPokemonTypeColor
+import ru.frozenpriest.pokebase.presentation.common.getColor
 import ru.frozenpriest.pokebase.presentation.theme.BlackText
 import ru.frozenpriest.pokebase.presentation.theme.BlackTextTransparent
 import ru.frozenpriest.pokebase.presentation.theme.PokeBaseTheme
@@ -216,11 +220,11 @@ fun PokemonNameAndTypes(modifier: Modifier, pokemon: Pokemon, dominantColor: Col
         ) {
             items(pokemon.species.types) { type ->
                 Card(
-                    backgroundColor = type.getPokemonTypeColor(),
+                    backgroundColor = type.getColor(),
                     shape = RoundedCornerShape(16.dp),
                 ) {
                     Text(
-                        text = type,
+                        text = type.typeName,
                         color = Color.White,
                         modifier = Modifier.padding(vertical = 4.dp, horizontal = 16.dp)
                     )
@@ -281,6 +285,87 @@ private fun PokemonStatsPager(pokemon: Pokemon) {
                 2 -> {
                     EvolutionPokemon(pokemon = pokemon)
                 }
+                3 -> {
+                    MovesPokemon(pokemon = pokemon)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun MovesPokemon(pokemon: Pokemon) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        item {
+            Row(
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Text(
+                    text = stringResource(id = R.string.move_name),
+                    Modifier.weight(1.5f),
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = stringResource(id = R.string.move_type),
+                    Modifier.weight(1f),
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = stringResource(id = R.string.move_category),
+                    Modifier.weight(1f),
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = stringResource(id = R.string.move_power),
+                    Modifier.weight(1f),
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = stringResource(id = R.string.move_accuracy),
+                    Modifier.weight(1f),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+        item {
+            Divider(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
+            )
+        }
+        items(pokemon.moves) { move ->
+            Row(
+                Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Text(
+                    text = move.name,
+                    Modifier.weight(1.5f),
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = move.type.typeName,
+                    Modifier.weight(1f),
+                    color = move.type.getColor()
+                )
+                Text(
+                    text = move.category.name,
+                    Modifier.weight(1f),
+                    color = move.category.getColor()
+
+                )
+                Text(
+                    text = move.power.toString(),
+                    Modifier.weight(1f)
+                )
+                Text(
+                    text = (move.accuracy * 100).toInt().toString() + " %",
+                    Modifier.weight(1f)
+                )
             }
         }
     }

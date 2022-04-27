@@ -8,9 +8,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.palette.graphics.Palette
+import ru.frozenpriest.pokebase.domain.model.Category
+import ru.frozenpriest.pokebase.domain.model.Move
 import ru.frozenpriest.pokebase.domain.model.Pokemon
 import ru.frozenpriest.pokebase.domain.model.Species
 import ru.frozenpriest.pokebase.domain.model.Stat
+import ru.frozenpriest.pokebase.domain.model.Type
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -27,7 +30,7 @@ class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
             spAttack = Stat.makeSpAttack(20),
             spDefence = Stat.makeSpDefence(20),
             speed = Stat.makeSpeed(20),
-            types = listOf("Grass", "Poison"),
+            types = listOf(Type.Grass, Type.Poison),
             possibleEvolutions = listOf(),
             image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
         )
@@ -41,13 +44,29 @@ class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
                 spAttack = Stat.makeSpAttack(20),
                 spDefence = Stat.makeSpDefence(20),
                 speed = Stat.makeSpeed(20),
-                types = listOf("Grass", "Poison"),
-                possibleEvolutions = listOf(bulba, bulba, bulba, bulba, bulba, bulba, bulba, bulba, bulba, bulba),
+                types = listOf(Type.Grass, Type.Poison),
+                possibleEvolutions = listOf(
+                    bulba,
+                    bulba,
+                    bulba,
+                    bulba,
+                    bulba,
+                    bulba,
+                    bulba,
+                    bulba,
+                    bulba,
+                    bulba
+                ),
                 image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
             ),
             level = 5,
             height = 70,
             weight = 6.9f,
+            moves = listOf(
+                Move("LUL", Type.Poison, Category.Status, 999999, 1.0f, 999),
+                Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33)
+            )
         )
     }
 

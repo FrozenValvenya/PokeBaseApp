@@ -11,4 +11,9 @@
     <string name="back">back</string>
     <string name="add_to_fav">Add to favorite</string>
     <string name="possible_evolution">Possible evolution - %1$s</string>
+    <string name="move_name">Move</string>
+    <string name="move_accuracy">Acc.</string>
+    <string name="move_power">Power</string>
+    <string name="move_category">Cat.</string>
+    <string name="move_type">Type</string>
 </resources>
