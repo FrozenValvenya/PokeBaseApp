@@ -1,6 +1,7 @@
-package ru.frozenpriest.pokebase
+package ru.frozenpriest.pokebase.presentation
 
 import android.app.Application
+import ru.frozenpriest.pokebase.BuildConfig
 import ru.frozenpriest.pokebase.data.di.DataComponentHolder
 import ru.frozenpriest.pokebase.data.di.DataFeatureApi
 import ru.frozenpriest.pokebase.data.di.DataFeatureDependencies
