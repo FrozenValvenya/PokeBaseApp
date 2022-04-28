@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -63,8 +62,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import ru.frozenpriest.pokebase.R
 import ru.frozenpriest.pokebase.domain.model.Pokemon
+import ru.frozenpriest.pokebase.presentation.common.TypeChip
 import ru.frozenpriest.pokebase.presentation.common.blackOrWhiteContentColor
-import ru.frozenpriest.pokebase.presentation.common.getColor
 import ru.frozenpriest.pokebase.presentation.theme.BlackText
 import ru.frozenpriest.pokebase.presentation.theme.BlackTextTransparent
 import ru.frozenpriest.pokebase.presentation.theme.PokeBaseTheme
@@ -210,16 +209,7 @@ fun PokemonNameAndTypes(modifier: Modifier, pokemon: Pokemon, dominantColor: Col
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start)
         ) {
             items(pokemon.species.types) { type ->
-                Card(
-                    backgroundColor = type.getColor(),
-                    shape = RoundedCornerShape(16.dp),
-                ) {
-                    Text(
-                        text = type.typeName,
-                        color = Color.White,
-                        modifier = Modifier.padding(vertical = 4.dp, horizontal = 16.dp)
-                    )
-                }
+                TypeChip(type)
             }
         }
     }
