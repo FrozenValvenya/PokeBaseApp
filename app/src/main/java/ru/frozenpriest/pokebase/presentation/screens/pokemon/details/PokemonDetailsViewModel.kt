@@ -84,6 +84,7 @@ class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    @Suppress("UnusedPrivateMember")
     fun setId(pokemonId: String) {
         // later should be used on flow
     }
