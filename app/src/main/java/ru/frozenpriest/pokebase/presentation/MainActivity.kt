@@ -13,6 +13,8 @@ import ru.frozenpriest.pokebase.di.AppComponentHolder
 import ru.frozenpriest.pokebase.di.daggerViewModel
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.PokemonDetailsScreen
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.PokemonDetailsViewModel
+import ru.frozenpriest.pokebase.presentation.screens.pokemon.owned.OwnedPokemonsScreen
+import ru.frozenpriest.pokebase.presentation.screens.pokemon.owned.OwnedPokemonsViewModel
 import ru.frozenpriest.pokebase.presentation.theme.PokeBaseTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +26,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController,
-                    startDestination = NavigationDestination.PokemonDetails.destination
+                    startDestination = NavigationDestination.OwnedPokemons.destination
                 ) {
                     val component = AppComponentHolder.getComponent()
 
@@ -32,7 +34,18 @@ class MainActivity : ComponentActivity() {
                         val viewModel: PokemonDetailsViewModel =
                             daggerViewModel(factory = component.getFactory())
 
-                        PokemonDetailsScreen(viewModel = viewModel, navController = navController)
+                        PokemonDetailsScreen(
+                            viewModel = viewModel,
+                            navController = navController,
+                            it.arguments?.getString("id")!!
+                        )
+                    }
+
+                    composable(NavigationDestination.OwnedPokemons.destination) {
+                        val viewModel: OwnedPokemonsViewModel =
+                            daggerViewModel(factory = component.getFactory())
+
+                        OwnedPokemonsScreen(viewModel = viewModel, navController = navController)
                     }
                 }
             }

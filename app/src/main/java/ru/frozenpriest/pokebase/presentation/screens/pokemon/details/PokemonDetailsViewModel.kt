@@ -35,6 +35,7 @@ class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
             image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
         )
         _selectedPokemon.value = Pokemon(
+            id = "r3r32r3r",
             name = "Poke",
             species = Species(
                 name = "Bulbasaur",
@@ -81,5 +82,10 @@ class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
                 Timber.i("Vibrant color should be ready $it")
             }
         }
+    }
+
+    @Suppress("UnusedPrivateMember")
+    fun setId(pokemonId: String) {
+        // later should be used on flow
     }
 }

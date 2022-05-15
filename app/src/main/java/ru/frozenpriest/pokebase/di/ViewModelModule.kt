@@ -7,6 +7,7 @@ import dagger.MapKey
 import dagger.Module
 import dagger.multibindings.IntoMap
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.PokemonDetailsViewModel
+import ru.frozenpriest.pokebase.presentation.screens.pokemon.owned.OwnedPokemonsViewModel
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.reflect.KClass
@@ -19,7 +20,12 @@ abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(PokemonDetailsViewModel::class)
-    abstract fun mainViewModel(myViewModel: PokemonDetailsViewModel): ViewModel
+    abstract fun pokemonDetailsViewModel(myViewModel: PokemonDetailsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(OwnedPokemonsViewModel::class)
+    abstract fun ownedPokemonsViewModel(myViewModel: OwnedPokemonsViewModel): ViewModel
 }
 
 class ViewModelFactory @Inject constructor(
