@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -62,14 +60,20 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import ru.frozenpriest.pokebase.R
 import ru.frozenpriest.pokebase.domain.model.Pokemon
-import ru.frozenpriest.pokebase.presentation.common.TypeChip
+import ru.frozenpriest.pokebase.presentation.common.TypesLine
 import ru.frozenpriest.pokebase.presentation.common.blackOrWhiteContentColor
+import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.EvolutionPokemon
 import ru.frozenpriest.pokebase.presentation.theme.BlackText
 import ru.frozenpriest.pokebase.presentation.theme.BlackTextTransparent
 import ru.frozenpriest.pokebase.presentation.theme.PokeBaseTheme
 
 @Composable
-fun PokemonDetailsScreen(viewModel: PokemonDetailsViewModel, navController: NavController) {
+fun PokemonDetailsScreen(
+    viewModel: PokemonDetailsViewModel,
+    navController: NavController,
+    pokemonId: String
+) {
+    viewModel.setId(pokemonId)
     val selectedPokemon = viewModel.selectedPokemon.observeAsState()
     selectedPokemon.value?.let { pokemon ->
         var dominantColor by remember {
@@ -204,14 +208,7 @@ fun PokemonNameAndTypes(modifier: Modifier, pokemon: Pokemon, dominantColor: Col
             color = blackOrWhiteContentColor(dominantColor)
         )
         Spacer(modifier = Modifier.height(8.dp))
-        LazyRow(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start)
-        ) {
-            items(pokemon.species.types) { type ->
-                TypeChip(type)
-            }
-        }
+        TypesLine(pokemon.species.types)
     }
 }
 
@@ -293,6 +290,6 @@ private fun getTabTextColor(
 @Composable
 fun DetailsPreview() {
     PokeBaseTheme {
-        PokemonDetailsScreen(viewModel = PokemonDetailsViewModel(), rememberNavController())
+        PokemonDetailsScreen(viewModel = PokemonDetailsViewModel(), rememberNavController(), "0")
     }
 }

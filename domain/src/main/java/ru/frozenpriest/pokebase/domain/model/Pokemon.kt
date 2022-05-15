@@ -1,6 +1,7 @@
 package ru.frozenpriest.pokebase.domain.model
 
 data class Pokemon(
+    val id: String,
     val name: String,
     val level: Int,
     val species: Species,

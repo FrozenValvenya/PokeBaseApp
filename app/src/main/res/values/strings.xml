@@ -16,4 +16,5 @@
     <string name="move_power">Power</string>
     <string name="move_category">Cat.</string>
     <string name="move_type">Type</string>
+    <string name="owned_pokemon_header">Owned pokemon</string>
 </resources>
