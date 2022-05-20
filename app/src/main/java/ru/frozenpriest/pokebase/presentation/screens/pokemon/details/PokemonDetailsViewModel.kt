@@ -31,6 +31,8 @@ class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
             spDefence = Stat.makeSpDefence(20),
             speed = Stat.makeSpeed(20),
             types = listOf(Type.Grass, Type.Poison),
+            height = 70,
+            weight = 6.9f,
             possibleEvolutions = listOf(),
             image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
         )
@@ -58,11 +60,12 @@ class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
                     bulba,
                     bulba
                 ),
+                height = 70,
+                weight = 6.9f,
                 image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
             ),
             level = 5,
-            height = 70,
-            weight = 6.9f,
+
             moves = listOf(
                 Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
                 Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),

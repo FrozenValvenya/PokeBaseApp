@@ -6,6 +6,7 @@ import dagger.Binds
 import dagger.MapKey
 import dagger.Module
 import dagger.multibindings.IntoMap
+import ru.frozenpriest.pokebase.presentation.screens.pokemon.add.AddNewPokemonViewModel
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.PokemonDetailsViewModel
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.owned.OwnedPokemonsViewModel
 import javax.inject.Inject
@@ -26,6 +27,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(OwnedPokemonsViewModel::class)
     abstract fun ownedPokemonsViewModel(myViewModel: OwnedPokemonsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AddNewPokemonViewModel::class)
+    abstract fun addNewPokemonViewModel(myViewModel: AddNewPokemonViewModel): ViewModel
 }
 
 class ViewModelFactory @Inject constructor(

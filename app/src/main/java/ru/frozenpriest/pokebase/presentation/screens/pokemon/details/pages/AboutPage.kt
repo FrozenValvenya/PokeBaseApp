@@ -28,11 +28,11 @@ fun AboutPokemon(pokemon: Pokemon) {
     ) {
         TextRow(
             name = stringResource(id = R.string.height),
-            value = pokemon.height.toString()
+            value = pokemon.species.height.toString()
         )
         TextRow(
             name = stringResource(id = R.string.weight),
-            value = pokemon.weight.toString()
+            value = pokemon.species.weight.toString()
         )
     }
 }
