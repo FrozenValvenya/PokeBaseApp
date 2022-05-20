@@ -17,4 +17,8 @@
     <string name="move_category">Cat.</string>
     <string name="move_type">Type</string>
     <string name="owned_pokemon_header">Owned pokemon</string>
+    <string name="add_new_pokemon">Add new pokemon</string>
+    <string name="name">Name:</string>
+    <string name="level">Level:</string>
+    <string name="add">Add</string>
 </resources>

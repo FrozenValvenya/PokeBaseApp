@@ -5,14 +5,14 @@ data class Pokemon(
     val name: String,
     val level: Int,
     val species: Species,
-    val height: Int,
-    val weight: Float,
     val moves: List<Move>
 )
 
 data class Species(
     val name: String,
     val image: String,
+    val height: Int,
+    val weight: Float,
     val hp: Stat,
     val attack: Stat,
     val defence: Stat,
