@@ -16,11 +16,14 @@ class AddNewPokemonViewModel @Inject constructor() : ViewModel() {
     private val _species = MutableLiveData<List<Species>>()
     val species: LiveData<List<Species>> get() = _species
 
-    val isFinished = MediatorLiveData<Boolean>().apply {
+    val readyToCreate = MediatorLiveData<Boolean>().apply {
         addSource(_selectedPokemon) {
             this.value = it?.species != null && it.level != null && it.name != null
         }
     }
+
+    private val _status = MutableLiveData(Status.Ready)
+    val status: LiveData<Status> get() = _status
 
     init {
         _species.value = listOf(
@@ -464,7 +467,11 @@ class AddNewPokemonViewModel @Inject constructor() : ViewModel() {
     }
 
     fun submitPokemon() {
+        _status.value = Status.Waiting
         // submits pokemon
+
+        // then set status to true after result
+        _status.value = Status.Success
     }
 }
 
@@ -473,3 +480,6 @@ data class PokemonData(
     val level: Int? = null,
     val species: Species? = null
 )
+enum class Status {
+    Ready, Waiting, Success
+}

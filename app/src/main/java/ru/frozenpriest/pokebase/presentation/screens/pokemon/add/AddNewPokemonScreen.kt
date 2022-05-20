@@ -22,6 +22,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -46,7 +47,12 @@ import ru.frozenpriest.pokebase.presentation.theme.PokeBaseTheme
 fun AddNewPokemonScreen(viewModel: AddNewPokemonViewModel, navController: NavController) {
     val pokemonData by viewModel.selectedPokemon.observeAsState(PokemonData())
     val species by viewModel.species.observeAsState(emptyList())
-    val isDataFinished by viewModel.isFinished.observeAsState(false)
+    val isDataFinished by viewModel.readyToCreate.observeAsState(false)
+    val status by viewModel.status.observeAsState()
+
+    LaunchedEffect(key1 = status) {
+        if (status == Status.Success) navController.popBackStack()
+    }
 
     Scaffold {
         Column(
