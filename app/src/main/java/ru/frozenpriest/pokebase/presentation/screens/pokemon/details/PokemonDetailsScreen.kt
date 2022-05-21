@@ -62,7 +62,10 @@ import ru.frozenpriest.pokebase.R
 import ru.frozenpriest.pokebase.domain.model.Pokemon
 import ru.frozenpriest.pokebase.presentation.common.TypesLine
 import ru.frozenpriest.pokebase.presentation.common.blackOrWhiteContentColor
+import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.AboutPokemon
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.EvolutionPokemon
+import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.MovesPokemon
+import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.StatsPokemon
 import ru.frozenpriest.pokebase.presentation.theme.BlackText
 import ru.frozenpriest.pokebase.presentation.theme.BlackTextTransparent
 import ru.frozenpriest.pokebase.presentation.theme.PokeBaseTheme

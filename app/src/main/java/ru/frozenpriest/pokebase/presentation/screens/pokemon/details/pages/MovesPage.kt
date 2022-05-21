@@ -1,4 +1,4 @@
-package ru.frozenpriest.pokebase.presentation.screens.pokemon.details
+package ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
