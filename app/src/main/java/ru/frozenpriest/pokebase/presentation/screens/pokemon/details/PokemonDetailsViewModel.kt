@@ -21,6 +21,9 @@ class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
     private val _selectedPokemon = MutableLiveData<Pokemon>()
     val selectedPokemon: LiveData<Pokemon> get() = _selectedPokemon
 
+    private val _moves = MutableLiveData<List<Move>>()
+    val moves: LiveData<List<Move>> get() = _moves
+
     init {
         val bulba = Species(
             name = "Bulbasaur",
@@ -74,6 +77,34 @@ class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
         )
     }
 
+    fun loadMoves() {
+        _moves.postValue(
+            listOf(
+                Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33),
+                Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33),
+                Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33),
+                Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33),
+                Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33),
+                Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33),
+                Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33),
+            )
+        )
+    }
+
     fun calculateDominantColor(drawable: Drawable, onFinish: (Color) -> Unit) {
         val bitmap = (drawable as BitmapDrawable).bitmap.copy(
             Bitmap.Config.ARGB_8888,
@@ -90,5 +121,13 @@ class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
     @Suppress("UnusedPrivateMember")
     fun setId(pokemonId: String) {
         // later should be used on flow
+    }
+
+    fun removeMove(move: Move) {
+        Timber.e("Remove move $move")
+    }
+
+    fun addMove(move: Move) {
+        Timber.e("Add move $move")
     }
 }

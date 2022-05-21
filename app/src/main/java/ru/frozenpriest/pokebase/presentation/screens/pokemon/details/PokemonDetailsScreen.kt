@@ -18,7 +18,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -31,6 +35,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +52,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImagePainter
@@ -59,12 +65,14 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import ru.frozenpriest.pokebase.R
+import ru.frozenpriest.pokebase.domain.model.Move
 import ru.frozenpriest.pokebase.domain.model.Pokemon
 import ru.frozenpriest.pokebase.presentation.common.TypesLine
 import ru.frozenpriest.pokebase.presentation.common.blackOrWhiteContentColor
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.AboutPokemon
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.EvolutionPokemon
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.MovesPokemon
+import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.MovesRow
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.StatsPokemon
 import ru.frozenpriest.pokebase.presentation.theme.BlackText
 import ru.frozenpriest.pokebase.presentation.theme.BlackTextTransparent
@@ -102,7 +110,7 @@ fun PokemonDetailsScreen(
                 DetailsTopBar(colorAnimated.value, navController)
             }
         ) {
-            DetailsContent(colorAnimated.value, pokemon, pokemonDrawable)
+            DetailsContent(colorAnimated.value, pokemon, pokemonDrawable, viewModel)
         }
     }
 }
@@ -111,7 +119,8 @@ fun PokemonDetailsScreen(
 private fun DetailsContent(
     dominantColor: Color,
     pokemon: Pokemon,
-    pokemonDrawable: AsyncImagePainter
+    pokemonDrawable: AsyncImagePainter,
+    viewModel: PokemonDetailsViewModel
 ) {
     Box(
         modifier = Modifier
@@ -136,15 +145,32 @@ private fun DetailsContent(
             alpha = 0.1f,
             colorFilter = ColorFilter.tint(blackOrWhiteContentColor(background = dominantColor))
         )
-        PokemonSheetWithImage(pokemon, pokemonDrawable)
+        PokemonSheetWithImage(pokemon, pokemonDrawable, viewModel)
     }
 }
 
 @Composable
 private fun BoxScope.PokemonSheetWithImage(
     pokemon: Pokemon,
-    pokemonDrawable: AsyncImagePainter
+    pokemonDrawable: AsyncImagePainter,
+    viewModel: PokemonDetailsViewModel
 ) {
+    var showAddMove by remember {
+        mutableStateOf(false)
+    }
+    var moveToAdd by remember {
+        mutableStateOf<Move?>(null)
+    }
+
+    if (showAddMove) {
+        AddMoveAlert(
+            onShowChange = { showAddMove = it },
+            moveToAdd = moveToAdd,
+            onNewMoveSelected = { moveToAdd = it },
+            viewModel = viewModel
+        )
+    }
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -152,7 +178,7 @@ private fun BoxScope.PokemonSheetWithImage(
             .align(Alignment.BottomCenter),
         shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
     ) {
-        PokemonStatsPager(pokemon)
+        PokemonStatsPager(pokemon, viewModel) { showAddMove = true }
     }
     Image(
         painter = pokemonDrawable,
@@ -216,7 +242,11 @@ fun PokemonNameAndTypes(modifier: Modifier, pokemon: Pokemon, dominantColor: Col
 }
 
 @Composable
-private fun PokemonStatsPager(pokemon: Pokemon) {
+private fun PokemonStatsPager(
+    pokemon: Pokemon,
+    viewModel: PokemonDetailsViewModel,
+    addMoveDialog: () -> Unit
+) {
     Column(
         Modifier
             .fillMaxSize()
@@ -251,7 +281,80 @@ private fun PokemonStatsPager(pokemon: Pokemon) {
                     EvolutionPokemon(pokemon = pokemon)
                 }
                 3 -> {
-                    MovesPokemon(pokemon = pokemon)
+                    MovesPokemon(
+                        pokemon = pokemon,
+                        removeMove = { viewModel.removeMove(it) },
+                        addMove = { addMoveDialog() }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BoxScope.AddMoveAlert(
+    onShowChange: (Boolean) -> Unit,
+    moveToAdd: Move?,
+    onNewMoveSelected: (Move) -> Unit,
+    viewModel: PokemonDetailsViewModel
+) {
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(0.8f)
+            .fillMaxHeight(0.5f)
+            .align(Alignment.Center)
+            .zIndex(100f)
+    ) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(8.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.add_new_move),
+                style = MaterialTheme.typography.h1
+            )
+
+            val movesState by viewModel.moves.observeAsState(emptyList())
+            LaunchedEffect(key1 = null) {
+                viewModel.loadMoves()
+            }
+            LazyColumn(Modifier.weight(1f)) {
+                items(movesState) { move ->
+                    MovesRow(
+                        move = move,
+                        modifier = if (move == moveToAdd)
+                            Modifier.background(MaterialTheme.colors.primaryVariant)
+                        else Modifier
+                    ) {
+                        onNewMoveSelected(move)
+                    }
+                }
+            }
+
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Button(
+                    modifier = Modifier.padding(4.dp),
+                    enabled = moveToAdd != null,
+                    onClick = {
+                        viewModel.addMove(moveToAdd!!)
+                        onShowChange(false)
+                    }
+                ) {
+                    Text(text = stringResource(R.string.add_new_move))
+                }
+                Button(
+                    modifier = Modifier.padding(4.dp),
+                    onClick = {
+                        onShowChange(false)
+                    }
+                ) {
+                    Text(text = stringResource(R.string.cancel))
                 }
             }
         }
