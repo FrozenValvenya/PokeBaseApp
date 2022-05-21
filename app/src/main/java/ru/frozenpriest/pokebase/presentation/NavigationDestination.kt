@@ -4,6 +4,7 @@ sealed class NavigationDestination(val destination: String) {
     object PokemonDetails : NavigationDestination("pokemon_details/{id}")
     object OwnedPokemons : NavigationDestination("owned_pokemon")
     object NewPokemon : NavigationDestination("new_pokemon")
+    object PokemonBattle : NavigationDestination("pokemon_battle")
 }
 
 fun String.withId(id: String): String {
