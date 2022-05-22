@@ -11,6 +11,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ru.frozenpriest.pokebase.di.AppComponentHolder
 import ru.frozenpriest.pokebase.di.daggerViewModel
+import ru.frozenpriest.pokebase.presentation.screens.login.LoginRegisterScreen
+import ru.frozenpriest.pokebase.presentation.screens.login.LoginRegisterViewModel
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.add.AddNewPokemonScreen
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.add.AddNewPokemonViewModel
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.battle.PokemonBattleScreen
@@ -30,9 +32,19 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController,
-                    startDestination = NavigationDestination.OwnedPokemons.destination
+                    startDestination = NavigationDestination.LoginRegister.destination
                 ) {
                     val component = AppComponentHolder.getComponent()
+
+                    composable(NavigationDestination.LoginRegister.destination) {
+                        val viewModel: LoginRegisterViewModel =
+                            daggerViewModel(factory = component.getFactory())
+
+                        LoginRegisterScreen(
+                            viewModel = viewModel,
+                            navController = navController,
+                        )
+                    }
 
                     composable(NavigationDestination.PokemonDetails.destination) {
                         val viewModel: PokemonDetailsViewModel =

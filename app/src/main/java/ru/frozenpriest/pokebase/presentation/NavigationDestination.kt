@@ -1,6 +1,7 @@
 package ru.frozenpriest.pokebase.presentation
 
 sealed class NavigationDestination(val destination: String) {
+    object LoginRegister : NavigationDestination("login_or_register")
     object PokemonDetails : NavigationDestination("pokemon_details/{id}")
     object OwnedPokemons : NavigationDestination("owned_pokemon")
     object NewPokemon : NavigationDestination("new_pokemon")

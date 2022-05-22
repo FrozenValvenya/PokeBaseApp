@@ -10,6 +10,7 @@ import ru.frozenpriest.pokebase.di.AppFeatureDependencies
 import ru.frozenpriest.pokebase.domain.di.DomainComponentHolder
 import ru.frozenpriest.pokebase.domain.di.DomainFeatureApi
 import ru.frozenpriest.pokebase.domain.di.DomainFeatureDependencies
+import ru.frozenpriest.pokebase.domain.login.LoginRegisterUseCase
 import ru.frozenpriest.pokebase.injector.BaseDependencyHolder
 import ru.frozenpriest.pokebase.injector.BaseFeatureDependencies
 import ru.frozenpriest.pokebase.injector.DependencyHolder0
@@ -40,6 +41,8 @@ class PokeBaseApp : Application() {
             object : AppFeatureDependencies {
                 override val dependencyHolder: BaseDependencyHolder<out BaseFeatureDependencies> =
                     dependencyHolder
+                override val loginRegisterUseCase: LoginRegisterUseCase =
+                    domainApi.loginRegisterUseCase
             }
         }.dependencies
     }
@@ -69,6 +72,7 @@ class PokeBaseApp : Application() {
             object : DomainFeatureDependencies {
                 override val dependencyHolder: BaseDependencyHolder<out BaseFeatureDependencies> =
                     dependencyHolder
+                override val remoteRepository = dataFeaturesApi.remoteRepository
             }
         }.dependencies
     }

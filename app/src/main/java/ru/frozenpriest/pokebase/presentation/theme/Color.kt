@@ -17,3 +17,5 @@ val BlackTextTransparent = Color(0x52000000)
 val StatBackground = Color(247, 247, 247)
 val StatBad = Color(202, 146, 146)
 val StatGood = Color(136, 186, 149)
+
+val LoginBackground = Color(248, 213, 182, 255)

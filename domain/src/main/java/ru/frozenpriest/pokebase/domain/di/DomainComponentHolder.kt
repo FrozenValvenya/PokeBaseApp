@@ -1,5 +1,7 @@
 package ru.frozenpriest.pokebase.domain.di
 
+import ru.frozenpriest.pokebase.data.remote.RemoteRepository
+import ru.frozenpriest.pokebase.domain.login.LoginRegisterUseCase
 import ru.frozenpriest.pokebase.injector.BaseFeatureAPI
 import ru.frozenpriest.pokebase.injector.BaseFeatureDependencies
 import ru.frozenpriest.pokebase.injector.ComponentHolder
@@ -20,6 +22,10 @@ object DomainComponentHolder : ComponentHolder<DomainFeatureApi, DomainFeatureDe
     override fun get(): DomainFeatureApi = componentHolderDelegate.get()
 }
 
-interface DomainFeatureDependencies : BaseFeatureDependencies
+interface DomainFeatureDependencies : BaseFeatureDependencies {
+    val remoteRepository: RemoteRepository
+}
 
-interface DomainFeatureApi : BaseFeatureAPI
+interface DomainFeatureApi : BaseFeatureAPI {
+    val loginRegisterUseCase: LoginRegisterUseCase
+}
