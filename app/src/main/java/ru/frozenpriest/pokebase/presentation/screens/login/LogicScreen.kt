@@ -2,6 +2,7 @@ package ru.frozenpriest.pokebase.presentation.screens.login
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +13,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -38,12 +40,6 @@ import ru.frozenpriest.pokebase.presentation.theme.StatGood
 
 @Composable
 fun LoginRegisterScreen(navController: NavController, viewModel: LoginRegisterViewModel) {
-    var login by remember {
-        mutableStateOf("")
-    }
-    var password by remember {
-        mutableStateOf("")
-    }
     val token by viewModel.token.observeAsState()
 
     LaunchedEffect(key1 = token) {
@@ -54,6 +50,93 @@ fun LoginRegisterScreen(navController: NavController, viewModel: LoginRegisterVi
         }
     }
 
+    val scaffoldState = SnackbarSetter(viewModel)
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        scaffoldState = scaffoldState
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(LoginBackground)
+        ) {
+            LoginCard(viewModel)
+        }
+    }
+}
+
+@Composable
+private fun BoxScope.LoginCard(viewModel: LoginRegisterViewModel) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .align(Alignment.Center),
+        backgroundColor = StatBackground
+    ) {
+        Column(
+            Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            var login by remember {
+                mutableStateOf("")
+            }
+            var password by remember {
+                mutableStateOf("")
+            }
+
+            OutlinedTextField(
+                value = login,
+                onValueChange = { login = it },
+                label = {
+                    Text(text = stringResource(id = R.string.login))
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp, horizontal = 16.dp)
+            )
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = {
+                    Text(text = stringResource(id = R.string.password))
+                },
+                singleLine = true,
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp, horizontal = 16.dp)
+            )
+
+            Button(
+                modifier = Modifier.fillMaxWidth(0.5f),
+                onClick = {
+                    viewModel.login(login, password)
+                },
+                colors = ButtonDefaults.buttonColors(backgroundColor = StatGood)
+            ) {
+                Text(text = stringResource(id = R.string.log_in))
+            }
+
+            Button(
+                modifier = Modifier.fillMaxWidth(0.5f),
+                onClick = {
+                    viewModel.register(login, password)
+                },
+                colors = ButtonDefaults.buttonColors(backgroundColor = StatBad)
+            ) {
+                Text(text = stringResource(id = R.string.register))
+            }
+        }
+    }
+}
+
+@Composable
+private fun SnackbarSetter(viewModel: LoginRegisterViewModel): ScaffoldState {
     val channel by viewModel.errorFlow.collectAsState(Errors.None)
     val scaffoldState = rememberScaffoldState()
 
@@ -67,74 +150,5 @@ fun LoginRegisterScreen(navController: NavController, viewModel: LoginRegisterVi
             Errors.None -> {}
         }
     }
-
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        scaffoldState = scaffoldState
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(LoginBackground)
-        ) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .align(Alignment.Center),
-                backgroundColor = StatBackground
-            ) {
-                Column(
-                    Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    OutlinedTextField(
-                        value = login,
-                        onValueChange = { login = it },
-                        label = {
-                            Text(text = stringResource(id = R.string.login))
-                        },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp, horizontal = 16.dp)
-                    )
-                    OutlinedTextField(
-                        value = password,
-                        onValueChange = { password = it },
-                        label = {
-                            Text(text = stringResource(id = R.string.password))
-                        },
-                        singleLine = true,
-                        visualTransformation = PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp, horizontal = 16.dp)
-                    )
-
-                    Button(
-                        modifier = Modifier.fillMaxWidth(0.5f),
-                        onClick = {
-                            viewModel.login(login, password)
-                        },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = StatGood)
-                    ) {
-                        Text(text = stringResource(id = R.string.log_in))
-                    }
-
-                    Button(
-                        modifier = Modifier.fillMaxWidth(0.5f),
-                        onClick = {
-                            viewModel.register(login, password)
-                        },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = StatBad)
-                    ) {
-                        Text(text = stringResource(id = R.string.register))
-                    }
-                }
-            }
-        }
-    }
+    return scaffoldState
 }
