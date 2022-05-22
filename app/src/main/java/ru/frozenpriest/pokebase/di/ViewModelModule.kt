@@ -6,6 +6,7 @@ import dagger.Binds
 import dagger.MapKey
 import dagger.Module
 import dagger.multibindings.IntoMap
+import ru.frozenpriest.pokebase.presentation.screens.login.LoginRegisterViewModel
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.add.AddNewPokemonViewModel
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.battle.PokemonBattleViewModel
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.PokemonDetailsViewModel
@@ -19,6 +20,11 @@ annotation class ViewModelKey(val value: KClass<out ViewModel>)
 
 @Module
 abstract class ViewModelModule {
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginRegisterViewModel::class)
+    abstract fun loginRegisterViewModel(myViewModel: LoginRegisterViewModel): ViewModel
+
     @Binds
     @IntoMap
     @ViewModelKey(PokemonDetailsViewModel::class)

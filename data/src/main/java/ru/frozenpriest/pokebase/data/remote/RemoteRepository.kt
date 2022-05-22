@@ -1,3 +1,55 @@
 package ru.frozenpriest.pokebase.data.remote
 
-interface RemoteRepository
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.request.url
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import kotlinx.coroutines.CancellationException
+import ru.frozenpriest.pokebase.data.remote.model.Credentials
+import ru.frozenpriest.pokebase.data.remote.model.Password
+import ru.frozenpriest.pokebase.data.remote.model.TokenResponse
+import ru.frozenpriest.pokebase.data.remote.model.Username
+import javax.inject.Inject
+
+interface RemoteRepository {
+    suspend fun login(login: String, password: String): Result<TokenResponse>
+    suspend fun register(login: String, password: String): Result<TokenResponse>
+}
+
+class RemoteRepositoryImpl @Inject constructor(
+    private val client: HttpClient
+) : RemoteRepository {
+    override suspend fun login(login: String, password: String): Result<TokenResponse> {
+        return try {
+            Result.success(
+                client.post {
+                    url(HttpRoutes.LOGIN_URL)
+
+                    contentType(ContentType.Application.Json)
+                    setBody(Credentials(Username(login), Password(password)))
+                }.body()
+            )
+        } catch (e: Exception) {
+            if (e is CancellationException) throw CancellationException()
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun register(login: String, password: String): Result<TokenResponse> {
+        return try {
+            Result.success(
+                client.post {
+                    url(HttpRoutes.REGISTER_URL)
+                    contentType(ContentType.Application.Json)
+                    setBody(Credentials(Username(login), Password(password)))
+                }.body()
+            )
+        } catch (e: Exception) {
+            if (e is CancellationException) throw CancellationException()
+            Result.failure(e)
+        }
+    }
+}

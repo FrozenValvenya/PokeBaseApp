@@ -27,4 +27,10 @@
     <string name="add_new_move">Add move</string>
     <string name="pokemon_battle">Pokemon Battle!</string>
     <string name="fight_pokemon">Fight pokemon</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log in</string>
+    <string name="register">Register</string>
+    <string name="error_logging_in">Wrong credentials</string>
+    <string name="error_register">Cant register</string>
 </resources>
