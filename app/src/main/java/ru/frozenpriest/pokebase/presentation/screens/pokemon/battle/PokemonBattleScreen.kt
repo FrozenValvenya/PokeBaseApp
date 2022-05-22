@@ -19,10 +19,9 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -33,89 +32,30 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import ru.frozenpriest.pokebase.R
-import ru.frozenpriest.pokebase.domain.model.Category
 import ru.frozenpriest.pokebase.domain.model.Move
-import ru.frozenpriest.pokebase.domain.model.Pokemon
-import ru.frozenpriest.pokebase.domain.model.Species
-import ru.frozenpriest.pokebase.domain.model.Stat
-import ru.frozenpriest.pokebase.domain.model.Type
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.MovesHeader
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.MovesRow
 import ru.frozenpriest.pokebase.presentation.theme.PokeBaseTheme
 import ru.frozenpriest.pokebase.presentation.theme.StatGood
+import timber.log.Timber
 
 @Composable
-fun PokemonBattleScreen(navController: NavController) {
-    var pokemon1 by remember {
-        mutableStateOf(
-            PokemonInBattle(
-                54,
-                Pokemon(
-                    id = "r3r32r3r",
-                    name = "Poke",
-                    species = Species(
-                        name = "Bulbasaur",
-                        hp = Stat.makeHP(85),
-                        attack = Stat.makeAttack(10),
-                        defence = Stat.makeDefence(20),
-                        spAttack = Stat.makeSpAttack(20),
-                        spDefence = Stat.makeSpDefence(20),
-                        speed = Stat.makeSpeed(20),
-                        types = listOf(Type.Grass, Type.Poison),
-                        possibleEvolutions = listOf(),
-                        height = 70,
-                        weight = 6.9f,
-                        image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-                    ),
-                    level = 5,
-
-                    moves = listOf(
-                        Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
-                        Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
-                        Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33)
-                    )
-                )
-            )
-        )
+fun PokemonBattleScreen(
+    viewModel: PokemonBattleViewModel,
+    id1: String,
+    id2: String
+) {
+    LaunchedEffect(key1 = null) {
+        viewModel.loadPokemon(id1, id2)
     }
 
-    var pokemon2 by remember {
-        mutableStateOf(
-            PokemonInBattle(
-                24,
-                Pokemon(
-                    id = "r3r32r3r",
-                    name = "Poke333",
-                    species = Species(
-                        name = "Bulbasaur333",
-                        hp = Stat.makeHP(85),
-                        attack = Stat.makeAttack(10),
-                        defence = Stat.makeDefence(20),
-                        spAttack = Stat.makeSpAttack(20),
-                        spDefence = Stat.makeSpDefence(20),
-                        speed = Stat.makeSpeed(20),
-                        types = listOf(Type.Grass, Type.Poison),
-                        possibleEvolutions = listOf(),
-                        height = 70,
-                        weight = 6.9f,
-                        image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-                    ),
-                    level = 5,
+    val pokemonPair by viewModel.pokemons.observeAsState(null)
+    val turn by viewModel.turn.observeAsState(false)
+    val pokemonInAction = pokemonPair?.let { if (turn) it.first else it.second }
 
-                    moves = listOf(
-                        Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
-                        Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
-                        Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33)
-                    )
-                )
-            )
-        )
-    }
     Scaffold(
         Modifier
             .fillMaxSize()
@@ -139,13 +79,18 @@ fun PokemonBattleScreen(navController: NavController) {
                         .fillMaxHeight(0.5f)
                         .padding(horizontal = 16.dp, vertical = 32.dp)
                 ) {
-                    PokemonWithHealthRow(pokemon1, false)
-                    PokemonWithHealthRow(pokemon2, true)
+                    pokemonPair?.let {
+                        PokemonWithHealthRow(it.first, false)
+                        PokemonWithHealthRow(it.second, true)
+                    }
                 }
             }
-            MoveSelector(pokemon1) { move ->
-                // viewmodel -> calculate damage,
-                // give turn to next
+            pokemonInAction?.let {
+                MoveSelector(pokemonInAction) { move ->
+                    Timber.i("Pokemon ${it.pokemon.name} uses ${move.name}")
+                    viewModel.calculateDamage(move)
+                    viewModel.toggleTurn()
+                }
             }
         }
     }
@@ -215,11 +160,10 @@ fun ColumnScope.PokemonWithHealthRow(pokemon: PokemonInBattle, inverted: Boolean
 @Composable
 fun PokeBattlePreview() {
     PokeBaseTheme {
-        PokemonBattleScreen(navController = rememberNavController())
+        PokemonBattleScreen(
+            PokemonBattleViewModel(),
+            "1",
+            "2"
+        )
     }
 }
-
-data class PokemonInBattle(
-    var hp: Int,
-    val pokemon: Pokemon
-)

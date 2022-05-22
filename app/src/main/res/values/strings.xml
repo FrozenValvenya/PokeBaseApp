@@ -26,4 +26,5 @@
     <string name="do_you_want_to_remove_it">Do you want to remove it?</string>
     <string name="add_new_move">Add move</string>
     <string name="pokemon_battle">Pokemon Battle!</string>
+    <string name="fight_pokemon">Fight pokemon</string>
 </resources>
