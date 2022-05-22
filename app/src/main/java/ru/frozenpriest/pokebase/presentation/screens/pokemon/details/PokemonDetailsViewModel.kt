@@ -24,6 +24,9 @@ class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
     private val _moves = MutableLiveData<List<Move>>()
     val moves: LiveData<List<Move>> get() = _moves
 
+    private val _pokemons = MutableLiveData<List<Pokemon>>()
+    val pokemons: LiveData<List<Pokemon>> get() = _pokemons
+
     init {
         val bulba = Species(
             name = "Bulbasaur",
@@ -129,5 +132,289 @@ class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
 
     fun addMove(move: Move) {
         Timber.e("Add move $move")
+    }
+
+    @Suppress("LongMethod")
+    fun loadPokemons() {
+        Timber.i("Loading pokemons")
+        _pokemons.postValue(
+            listOf(
+                Pokemon(
+                    id = "r3r32r3r",
+                    name = "Poke",
+                    species = Species(
+                        name = "Bulbasaur",
+                        hp = Stat.makeHP(85),
+                        attack = Stat.makeAttack(10),
+                        defence = Stat.makeDefence(20),
+                        spAttack = Stat.makeSpAttack(20),
+                        spDefence = Stat.makeSpDefence(20),
+                        speed = Stat.makeSpeed(20),
+                        types = listOf(Type.Grass, Type.Poison),
+                        possibleEvolutions = listOf(),
+                        height = 70,
+                        weight = 6.9f,
+                        image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
+                    ),
+                    level = 5,
+
+                    moves = listOf(
+                        Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                        Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                        Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33)
+                    )
+                ),
+                Pokemon(
+                    id = "r3r32r3r",
+                    name = "Poke",
+                    species = Species(
+                        name = "Bulbasaur",
+                        hp = Stat.makeHP(85),
+                        attack = Stat.makeAttack(10),
+                        defence = Stat.makeDefence(20),
+                        spAttack = Stat.makeSpAttack(20),
+                        spDefence = Stat.makeSpDefence(20),
+                        speed = Stat.makeSpeed(20),
+                        types = listOf(Type.Grass, Type.Poison),
+                        possibleEvolutions = listOf(),
+                        height = 70,
+                        weight = 6.9f,
+                        image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
+                    ),
+                    level = 5,
+
+                    moves = listOf(
+                        Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                        Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                        Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33)
+                    )
+                ),
+                Pokemon(
+                    id = "r3r32r3r",
+                    name = "Poke",
+                    species = Species(
+                        name = "Bulbasaur",
+                        hp = Stat.makeHP(85),
+                        attack = Stat.makeAttack(10),
+                        defence = Stat.makeDefence(20),
+                        spAttack = Stat.makeSpAttack(20),
+                        spDefence = Stat.makeSpDefence(20),
+                        speed = Stat.makeSpeed(20),
+                        types = listOf(Type.Grass, Type.Poison),
+                        possibleEvolutions = listOf(),
+                        height = 70,
+                        weight = 6.9f,
+                        image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
+                    ),
+                    level = 5,
+
+                    moves = listOf(
+                        Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                        Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                        Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33)
+                    )
+                ),
+                Pokemon(
+                    id = "r3r32r3r",
+                    name = "Poke",
+                    species = Species(
+                        name = "Bulbasaur",
+                        hp = Stat.makeHP(85),
+                        attack = Stat.makeAttack(10),
+                        defence = Stat.makeDefence(20),
+                        spAttack = Stat.makeSpAttack(20),
+                        spDefence = Stat.makeSpDefence(20),
+                        speed = Stat.makeSpeed(20),
+                        types = listOf(Type.Grass, Type.Poison),
+                        possibleEvolutions = listOf(),
+                        height = 70,
+                        weight = 6.9f,
+                        image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
+                    ),
+                    level = 5,
+
+                    moves = listOf(
+                        Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                        Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                        Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33)
+                    )
+                ),
+                Pokemon(
+                    id = "r3r32r3r",
+                    name = "Poke",
+                    species = Species(
+                        name = "Bulbasaur",
+                        hp = Stat.makeHP(85),
+                        attack = Stat.makeAttack(10),
+                        defence = Stat.makeDefence(20),
+                        spAttack = Stat.makeSpAttack(20),
+                        spDefence = Stat.makeSpDefence(20),
+                        speed = Stat.makeSpeed(20),
+                        types = listOf(Type.Grass, Type.Poison),
+                        possibleEvolutions = listOf(),
+                        height = 70,
+                        weight = 6.9f,
+                        image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
+                    ),
+                    level = 5,
+
+                    moves = listOf(
+                        Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                        Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                        Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33)
+                    )
+                ),
+                Pokemon(
+                    id = "r3r32r3r",
+                    name = "Poke",
+                    species = Species(
+                        name = "Bulbasaur",
+                        hp = Stat.makeHP(85),
+                        attack = Stat.makeAttack(10),
+                        defence = Stat.makeDefence(20),
+                        spAttack = Stat.makeSpAttack(20),
+                        spDefence = Stat.makeSpDefence(20),
+                        speed = Stat.makeSpeed(20),
+                        types = listOf(Type.Grass, Type.Poison),
+                        possibleEvolutions = listOf(),
+                        height = 70,
+                        weight = 6.9f,
+                        image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
+                    ),
+                    level = 5,
+
+                    moves = listOf(
+                        Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                        Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                        Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33)
+                    )
+                ),
+                Pokemon(
+                    id = "r3r32r3r",
+                    name = "Poke",
+                    species = Species(
+                        name = "Bulbasaur",
+                        hp = Stat.makeHP(85),
+                        attack = Stat.makeAttack(10),
+                        defence = Stat.makeDefence(20),
+                        spAttack = Stat.makeSpAttack(20),
+                        spDefence = Stat.makeSpDefence(20),
+                        speed = Stat.makeSpeed(20),
+                        types = listOf(Type.Grass, Type.Poison),
+                        possibleEvolutions = listOf(),
+                        height = 70,
+                        weight = 6.9f,
+                        image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
+                    ),
+                    level = 5,
+
+                    moves = listOf(
+                        Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                        Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                        Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33)
+                    )
+                ),
+                Pokemon(
+                    id = "r3r32r3r",
+                    name = "Poke",
+                    species = Species(
+                        name = "Bulbasaur",
+                        hp = Stat.makeHP(85),
+                        attack = Stat.makeAttack(10),
+                        defence = Stat.makeDefence(20),
+                        spAttack = Stat.makeSpAttack(20),
+                        spDefence = Stat.makeSpDefence(20),
+                        speed = Stat.makeSpeed(20),
+                        types = listOf(Type.Grass, Type.Poison),
+                        possibleEvolutions = listOf(),
+                        height = 70,
+                        weight = 6.9f,
+                        image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
+                    ),
+                    level = 5,
+
+                    moves = listOf(
+                        Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                        Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                        Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33)
+                    )
+                ),
+                Pokemon(
+                    id = "r3r32r3r",
+                    name = "Poke",
+                    species = Species(
+                        name = "Bulbasaur",
+                        hp = Stat.makeHP(85),
+                        attack = Stat.makeAttack(10),
+                        defence = Stat.makeDefence(20),
+                        spAttack = Stat.makeSpAttack(20),
+                        spDefence = Stat.makeSpDefence(20),
+                        speed = Stat.makeSpeed(20),
+                        types = listOf(Type.Grass, Type.Poison),
+                        possibleEvolutions = listOf(),
+                        height = 70,
+                        weight = 6.9f,
+                        image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
+                    ),
+                    level = 5,
+
+                    moves = listOf(
+                        Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                        Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                        Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33)
+                    )
+                ),
+                Pokemon(
+                    id = "r3r32r3r",
+                    name = "Poke",
+                    species = Species(
+                        name = "Bulbasaur",
+                        hp = Stat.makeHP(85),
+                        attack = Stat.makeAttack(10),
+                        defence = Stat.makeDefence(20),
+                        spAttack = Stat.makeSpAttack(20),
+                        spDefence = Stat.makeSpDefence(20),
+                        speed = Stat.makeSpeed(20),
+                        types = listOf(Type.Grass, Type.Poison),
+                        possibleEvolutions = listOf(),
+                        height = 70,
+                        weight = 6.9f,
+                        image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
+                    ),
+                    level = 5,
+
+                    moves = listOf(
+                        Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                        Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                        Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33)
+                    )
+                ),
+                Pokemon(
+                    id = "r3r32r3r",
+                    name = "Poke",
+                    species = Species(
+                        name = "Bulbasaur",
+                        hp = Stat.makeHP(85),
+                        attack = Stat.makeAttack(10),
+                        defence = Stat.makeDefence(20),
+                        spAttack = Stat.makeSpAttack(20),
+                        spDefence = Stat.makeSpDefence(20),
+                        speed = Stat.makeSpeed(20),
+                        types = listOf(Type.Grass, Type.Poison),
+                        possibleEvolutions = listOf(),
+                        height = 70,
+                        weight = 6.9f,
+                        image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
+                    ),
+                    level = 5,
+
+                    moves = listOf(
+                        Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
+                        Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
+                        Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33)
+                    )
+                )
+            )
+        )
     }
 }

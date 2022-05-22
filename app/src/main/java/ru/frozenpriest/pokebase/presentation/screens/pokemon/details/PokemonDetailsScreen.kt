@@ -33,7 +33,6 @@ import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,12 +48,10 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -67,6 +64,7 @@ import kotlinx.coroutines.launch
 import ru.frozenpriest.pokebase.R
 import ru.frozenpriest.pokebase.domain.model.Move
 import ru.frozenpriest.pokebase.domain.model.Pokemon
+import ru.frozenpriest.pokebase.presentation.NavigationDestination
 import ru.frozenpriest.pokebase.presentation.common.TypesLine
 import ru.frozenpriest.pokebase.presentation.common.blackOrWhiteContentColor
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.AboutPokemon
@@ -74,9 +72,10 @@ import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.Evolu
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.MovesPokemon
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.MovesRow
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.StatsPokemon
+import ru.frozenpriest.pokebase.presentation.screens.pokemon.owned.PokemonItem
 import ru.frozenpriest.pokebase.presentation.theme.BlackText
 import ru.frozenpriest.pokebase.presentation.theme.BlackTextTransparent
-import ru.frozenpriest.pokebase.presentation.theme.PokeBaseTheme
+import ru.frozenpriest.pokebase.presentation.withTwoPokemon
 
 @Composable
 fun PokemonDetailsScreen(
@@ -104,13 +103,64 @@ fun PokemonDetailsScreen(
                     )
                 },
             )
+
+        var showFightSelector by remember {
+            mutableStateOf(false)
+        }
+
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                DetailsTopBar(colorAnimated.value, navController)
+                DetailsTopBar(colorAnimated.value, navController) { showFightSelector = true }
             }
         ) {
             DetailsContent(colorAnimated.value, pokemon, pokemonDrawable, viewModel)
+
+            if (showFightSelector) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    SelectOpponentAlert(
+                        onPokemonSelected = {
+                            showFightSelector = false
+                            navController.navigate(
+                                NavigationDestination.PokemonBattle.destination.withTwoPokemon(
+                                    selectedPokemon.value!!.id,
+                                    it.id
+                                )
+                            )
+                        },
+                        viewModel = viewModel
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun BoxScope.SelectOpponentAlert(
+    onPokemonSelected: (Pokemon) -> Unit,
+    viewModel: PokemonDetailsViewModel
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(0.8f)
+            .fillMaxHeight(0.5f)
+            .align(Alignment.Center)
+            .zIndex(100f)
+    ) {
+        val pokemonState by viewModel.pokemons.observeAsState(emptyList())
+        LaunchedEffect(key1 = null) {
+            viewModel.loadPokemons()
+        }
+        LazyColumn(Modifier.fillMaxSize()) {
+            items(pokemonState) { pokemon ->
+                PokemonItem(
+                    modifier = Modifier.padding(8.dp),
+                    pokemon = pokemon
+                ) {
+                    onPokemonSelected(pokemon)
+                }
+            }
         }
     }
 }
@@ -193,7 +243,8 @@ private fun BoxScope.PokemonSheetWithImage(
 @Composable
 private fun DetailsTopBar(
     dominantColor: Color,
-    navController: NavController
+    navController: NavController,
+    onFightClick: () -> Unit
 ) {
     Row(
         Modifier
@@ -211,11 +262,13 @@ private fun DetailsTopBar(
                 tint = blackOrWhiteContentColor(dominantColor)
             )
         }
-        IconButton(onClick = { /*mark as favorite(dont know if this will be impl*/ }) {
+        IconButton(onClick = {
+            onFightClick()
+        }) {
             Icon(
-                imageVector = Icons.Outlined.FavoriteBorder,
+                painter = painterResource(id = R.drawable.ic_fight),
                 contentDescription = stringResource(
-                    id = R.string.add_to_fav
+                    id = R.string.fight_pokemon
                 ),
                 tint = blackOrWhiteContentColor(dominantColor)
             )
@@ -391,11 +444,3 @@ private fun getTabTextColor(
     index: Int,
     pagerState: PagerState
 ) = if (index == pagerState.currentPage) BlackText else BlackTextTransparent
-
-@Preview
-@Composable
-fun DetailsPreview() {
-    PokeBaseTheme {
-        PokemonDetailsScreen(viewModel = PokemonDetailsViewModel(), rememberNavController(), "0")
-    }
-}

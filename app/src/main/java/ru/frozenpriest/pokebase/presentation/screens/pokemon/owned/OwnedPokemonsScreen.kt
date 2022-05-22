@@ -102,6 +102,7 @@ private fun OwnedPokemons(
         }
         items(items = pokemons) { item ->
             PokemonItem(
+                modifier = Modifier,
                 pokemon = item,
                 onClick = {
                     navController.navigate(
@@ -117,8 +118,9 @@ private fun OwnedPokemons(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun PokemonItem(pokemon: Pokemon, onClick: () -> Unit) {
+fun PokemonItem(modifier: Modifier, pokemon: Pokemon, onClick: () -> Unit) {
     Card(
+        modifier = modifier,
         backgroundColor = pokemon.species.types.first().getColor(),
         shape = RoundedCornerShape(16.dp),
         onClick = {

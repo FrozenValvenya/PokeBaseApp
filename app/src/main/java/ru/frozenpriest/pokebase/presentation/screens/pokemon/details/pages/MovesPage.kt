@@ -110,7 +110,7 @@ private fun RemoveMoveDialog(
 }
 
 @Composable
-private fun MovesHeader() {
+fun MovesHeader() {
     Row(
         Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -145,13 +145,14 @@ private fun MovesHeader() {
 }
 
 @Composable
-fun MovesRow(modifier: Modifier, move: Move, onClick: () -> Unit) {
+fun MovesRow(modifier: Modifier, move: Move, onClick: (() -> Unit)? = null) {
+    val isClickable = if (onClick != null) Modifier.clickable { onClick() } else Modifier
     Row(
         Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
-            .clickable { onClick() }
-            .then(modifier),
+            .then(modifier)
+            .then(isClickable),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
