@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TokenResponse(
     @SerialName("JWT")
-    val JWT: String
+    val token: String
 )
