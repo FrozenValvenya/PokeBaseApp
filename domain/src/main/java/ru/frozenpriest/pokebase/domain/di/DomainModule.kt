@@ -11,6 +11,8 @@ import ru.frozenpriest.pokebase.domain.pokemon.GetOwnedPokemonShortUseCase
 import ru.frozenpriest.pokebase.domain.pokemon.GetOwnedPokemonShortUseCaseImpl
 import ru.frozenpriest.pokebase.domain.pokemon.GetPokemonDetailsUseCase
 import ru.frozenpriest.pokebase.domain.pokemon.GetPokemonDetailsUseCaseImpl
+import ru.frozenpriest.pokebase.domain.pokemon.GetSpeciesUseCase
+import ru.frozenpriest.pokebase.domain.pokemon.GetSpeciesUseCaseImpl
 
 @Module
 internal class DomainModule {
@@ -29,4 +31,8 @@ internal class DomainModule {
     @Provides
     fun provideGetPokemonDetailsUseCase(repository: RemoteRepository): GetPokemonDetailsUseCase =
         GetPokemonDetailsUseCaseImpl(repository)
+
+    @Provides
+    fun provideGetSpeciesUseCase(repository: RemoteRepository): GetSpeciesUseCase =
+        GetSpeciesUseCaseImpl(repository)
 }

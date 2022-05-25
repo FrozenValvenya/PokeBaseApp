@@ -2,6 +2,7 @@ package ru.frozenpriest.pokebase.domain.model
 
 import ru.frozenpriest.pokebase.data.remote.model.PokemonResponse
 import ru.frozenpriest.pokebase.data.remote.model.SpeciesResponse
+import ru.frozenpriest.pokebase.data.remote.model.SpeciesShortResponse
 import ru.frozenpriest.pokebase.data.remote.model.StatsResponse
 
 data class Pokemon(
@@ -45,6 +46,22 @@ fun SpeciesResponse.toSpecies(): Species {
         this.baseStats.toStats(),
         this.movePool.map { it.toMove() },
         this.image
+    )
+}
+
+data class SpeciesShort(
+    val speciesId: String,
+    val name: String,
+    val types: List<Type>,
+    val image: String
+)
+
+fun SpeciesShortResponse.toShort(): SpeciesShort {
+    return SpeciesShort(
+        speciesId = speciesId,
+        name = name,
+        types = listOfNotNull(primaryType, secondaryType).map { Type.valueOf(it) },
+        image = image
     )
 }
 

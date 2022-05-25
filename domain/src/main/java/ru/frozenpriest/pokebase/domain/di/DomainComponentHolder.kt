@@ -5,6 +5,7 @@ import ru.frozenpriest.pokebase.domain.login.LoginRegisterUseCase
 import ru.frozenpriest.pokebase.domain.pokemon.GetMovesUseCase
 import ru.frozenpriest.pokebase.domain.pokemon.GetOwnedPokemonShortUseCase
 import ru.frozenpriest.pokebase.domain.pokemon.GetPokemonDetailsUseCase
+import ru.frozenpriest.pokebase.domain.pokemon.GetSpeciesUseCase
 import ru.frozenpriest.pokebase.injector.BaseFeatureAPI
 import ru.frozenpriest.pokebase.injector.BaseFeatureDependencies
 import ru.frozenpriest.pokebase.injector.ComponentHolder
@@ -34,4 +35,5 @@ interface DomainFeatureApi : BaseFeatureAPI {
     val getOwnedPokemonShortUseCase: GetOwnedPokemonShortUseCase
     val getMovesUseCase: GetMovesUseCase
     val getPokemonDetailsUseCase: GetPokemonDetailsUseCase
+    val getSpeciesUseCase: GetSpeciesUseCase
 }

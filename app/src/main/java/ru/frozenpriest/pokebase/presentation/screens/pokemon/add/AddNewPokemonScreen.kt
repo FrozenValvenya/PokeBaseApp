@@ -38,7 +38,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import ru.frozenpriest.pokebase.R
-import ru.frozenpriest.pokebase.domain.model.Species
+import ru.frozenpriest.pokebase.domain.model.SpeciesShort
+import ru.frozenpriest.pokebase.domain.pokemon.GetSpeciesUseCase
 import ru.frozenpriest.pokebase.presentation.common.blackOrWhiteContentColor
 import ru.frozenpriest.pokebase.presentation.common.getColor
 import ru.frozenpriest.pokebase.presentation.theme.PokeBaseTheme
@@ -49,6 +50,10 @@ fun AddNewPokemonScreen(viewModel: AddNewPokemonViewModel, navController: NavCon
     val species by viewModel.species.observeAsState(emptyList())
     val isDataFinished by viewModel.readyToCreate.observeAsState(false)
     val status by viewModel.status.observeAsState()
+
+    LaunchedEffect(key1 = null) {
+        viewModel.getSpecies()
+    }
 
     LaunchedEffect(key1 = status) {
         if (status == Status.Success) navController.popBackStack()
@@ -87,7 +92,7 @@ fun AddNewPokemonScreen(viewModel: AddNewPokemonViewModel, navController: NavCon
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun ColumnScope.SpeciesSelector(
-    species: List<Species>,
+    species: List<SpeciesShort>,
     pokemonData: PokemonData,
     viewModel: AddNewPokemonViewModel
 ) {
@@ -99,7 +104,7 @@ private fun ColumnScope.SpeciesSelector(
         items(species) { species ->
             Card(
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                backgroundColor = if (species == pokemonData.species)
+                backgroundColor = if (species.speciesId == pokemonData.species?.speciesId)
                     MaterialTheme.colors.primaryVariant
                 else
                     MaterialTheme.colors.background,
@@ -194,7 +199,11 @@ private fun LevelField(
 fun AddNewPreview() {
     PokeBaseTheme {
         AddNewPokemonScreen(
-            viewModel = AddNewPokemonViewModel(),
+            viewModel = AddNewPokemonViewModel(object : GetSpeciesUseCase {
+                override suspend fun getSpecies(): Result<List<SpeciesShort>> {
+                    return Result.success(emptyList())
+                }
+            }),
             navController = rememberNavController()
         )
     }

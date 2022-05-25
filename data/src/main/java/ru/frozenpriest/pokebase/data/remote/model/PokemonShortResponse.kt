@@ -6,13 +6,13 @@ import kotlinx.serialization.Serializable
 data class PokemonShortResponse(
     val id: String,
     val name: String,
-    val species: SpeciesShort,
+    val species: SpeciesShortResponse,
     val level: Int
 )
 
 @Serializable
-data class SpeciesShort(
-    val speciesId: Int,
+data class SpeciesShortResponse(
+    val speciesId: String,
     val name: String,
     val primaryType: String,
     val secondaryType: String?,

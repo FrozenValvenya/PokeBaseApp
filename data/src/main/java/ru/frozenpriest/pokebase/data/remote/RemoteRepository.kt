@@ -14,6 +14,7 @@ import ru.frozenpriest.pokebase.data.remote.model.MoveResponse
 import ru.frozenpriest.pokebase.data.remote.model.Password
 import ru.frozenpriest.pokebase.data.remote.model.PokemonResponse
 import ru.frozenpriest.pokebase.data.remote.model.PokemonShortResponse
+import ru.frozenpriest.pokebase.data.remote.model.SpeciesShortResponse
 import ru.frozenpriest.pokebase.data.remote.model.TokenResponse
 import ru.frozenpriest.pokebase.data.remote.model.Username
 import javax.inject.Inject
@@ -24,6 +25,7 @@ interface RemoteRepository {
     suspend fun getOwnedPokemon(): Result<List<PokemonShortResponse>>
     suspend fun getMoves(speciesId: String): Result<List<MoveResponse>>
     suspend fun getPokemonDetails(pokemonId: String): Result<PokemonResponse>
+    suspend fun getSpecies(): Result<List<SpeciesShortResponse>>
 }
 
 class RemoteRepositoryImpl @Inject constructor(
@@ -89,6 +91,19 @@ class RemoteRepositoryImpl @Inject constructor(
             Result.success(
                 client.get {
                     url(HttpRoutes.getPokemonDetailsRoute(pokemonId))
+                    contentType(ContentType.Application.Json)
+                }.body()
+            )
+        } catch (e: ResponseException) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getSpecies(): Result<List<SpeciesShortResponse>> {
+        return try {
+            Result.success(
+                client.get {
+                    url(HttpRoutes.SPECIES_URL)
                     contentType(ContentType.Application.Json)
                 }.body()
             )
