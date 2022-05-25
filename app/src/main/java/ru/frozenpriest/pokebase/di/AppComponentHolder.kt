@@ -1,5 +1,6 @@
 package ru.frozenpriest.pokebase.di
 
+import ru.frozenpriest.pokebase.data.local.DataStoreRepository
 import ru.frozenpriest.pokebase.domain.login.LoginRegisterUseCase
 import ru.frozenpriest.pokebase.injector.BaseFeatureAPI
 import ru.frozenpriest.pokebase.injector.BaseFeatureDependencies
@@ -23,6 +24,7 @@ object AppComponentHolder : ComponentHolder<AppFeatureApi, AppFeatureDependencie
 
 interface AppFeatureDependencies : BaseFeatureDependencies {
     val loginRegisterUseCase: LoginRegisterUseCase
+    val dataStoreRepository: DataStoreRepository
 }
 
 interface AppFeatureApi : BaseFeatureAPI

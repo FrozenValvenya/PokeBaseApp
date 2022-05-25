@@ -5,6 +5,7 @@ import ru.frozenpriest.pokebase.BuildConfig
 import ru.frozenpriest.pokebase.data.di.DataComponentHolder
 import ru.frozenpriest.pokebase.data.di.DataFeatureApi
 import ru.frozenpriest.pokebase.data.di.DataFeatureDependencies
+import ru.frozenpriest.pokebase.data.local.DataStoreRepository
 import ru.frozenpriest.pokebase.di.AppComponentHolder
 import ru.frozenpriest.pokebase.di.AppFeatureDependencies
 import ru.frozenpriest.pokebase.domain.di.DomainComponentHolder
@@ -15,6 +16,7 @@ import ru.frozenpriest.pokebase.injector.BaseDependencyHolder
 import ru.frozenpriest.pokebase.injector.BaseFeatureDependencies
 import ru.frozenpriest.pokebase.injector.DependencyHolder0
 import ru.frozenpriest.pokebase.injector.DependencyHolder1
+import ru.frozenpriest.pokebase.injector.DependencyHolder2
 import timber.log.Timber
 
 @Suppress("MaxLineLength")
@@ -32,17 +34,19 @@ class PokeBaseApp : Application() {
 
     private fun provideAppDependencyProvider(): () -> AppFeatureDependencies = {
         class AppComponentDependencyHolder(
-            override val block: (BaseDependencyHolder<AppFeatureDependencies>, DomainFeatureApi) -> AppFeatureDependencies
-        ) : DependencyHolder1<DomainFeatureApi, AppFeatureDependencies>(
-            api1 = DomainComponentHolder.get()
+            override val block: (BaseDependencyHolder<AppFeatureDependencies>, DomainFeatureApi, DataFeatureApi) -> AppFeatureDependencies
+        ) : DependencyHolder2<DomainFeatureApi, DataFeatureApi, AppFeatureDependencies>(
+            api1 = DomainComponentHolder.get(),
+            api2 = DataComponentHolder.get()
         )
 
-        AppComponentDependencyHolder { dependencyHolder, domainApi ->
+        AppComponentDependencyHolder { dependencyHolder, domainApi, dataApi ->
             object : AppFeatureDependencies {
                 override val dependencyHolder: BaseDependencyHolder<out BaseFeatureDependencies> =
                     dependencyHolder
                 override val loginRegisterUseCase: LoginRegisterUseCase =
                     domainApi.loginRegisterUseCase
+                override val dataStoreRepository: DataStoreRepository = dataApi.dataStoreRepository
             }
         }.dependencies
     }
