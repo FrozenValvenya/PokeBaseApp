@@ -1,6 +1,7 @@
 package ru.frozenpriest.pokebase.di
 
 import dagger.Component
+import ru.frozenpriest.pokebase.data.local.DataStoreRepository
 import javax.inject.Singleton
 
 @Component(
@@ -10,6 +11,7 @@ import javax.inject.Singleton
 @Singleton
 internal interface AppComponent : AppFeatureApi {
     fun getFactory(): ViewModelFactory
+    fun getDataStoreRepository(): DataStoreRepository
 
     companion object {
         fun initAndGet(appDependencies: AppFeatureDependencies): AppComponent {

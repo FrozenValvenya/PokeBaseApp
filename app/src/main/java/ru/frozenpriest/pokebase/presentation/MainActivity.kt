@@ -5,6 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,6 +27,7 @@ import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.PokemonDeta
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.owned.OwnedPokemonsScreen
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.owned.OwnedPokemonsViewModel
 import ru.frozenpriest.pokebase.presentation.theme.PokeBaseTheme
+import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,57 +35,76 @@ class MainActivity : ComponentActivity() {
         setContent {
             PokeBaseTheme {
                 val navController = rememberNavController()
+                val component = AppComponentHolder.getComponent()
 
-                NavHost(
-                    navController,
-                    startDestination = NavigationDestination.LoginRegister.destination
-                ) {
-                    val component = AppComponentHolder.getComponent()
+                var token by remember {
+                    mutableStateOf<String?>(null)
+                }
 
-                    composable(NavigationDestination.LoginRegister.destination) {
-                        val viewModel: LoginRegisterViewModel =
-                            daggerViewModel(factory = component.getFactory())
+                LaunchedEffect(key1 = null) {
+                    token = component.getDataStoreRepository().getBearerToken()
+                }
+                if (token != null) {
+                    Timber.d("Got token $token")
+                    NavHost(
+                        navController,
+                        startDestination = if (token == "")
+                            NavigationDestination.LoginRegister.destination
+                        else
+                            NavigationDestination.OwnedPokemons.destination
+                    ) {
 
-                        LoginRegisterScreen(
-                            viewModel = viewModel,
-                            navController = navController,
-                        )
-                    }
+                        composable(NavigationDestination.LoginRegister.destination) {
+                            val viewModel: LoginRegisterViewModel =
+                                daggerViewModel(factory = component.getFactory())
 
-                    composable(NavigationDestination.PokemonDetails.destination) {
-                        val viewModel: PokemonDetailsViewModel =
-                            daggerViewModel(factory = component.getFactory())
+                            LoginRegisterScreen(
+                                viewModel = viewModel,
+                                navController = navController,
+                            )
+                        }
 
-                        PokemonDetailsScreen(
-                            viewModel = viewModel,
-                            navController = navController,
-                            it.arguments?.getString("id")!!
-                        )
-                    }
+                        composable(NavigationDestination.PokemonDetails.destination) {
+                            val viewModel: PokemonDetailsViewModel =
+                                daggerViewModel(factory = component.getFactory())
 
-                    composable(NavigationDestination.OwnedPokemons.destination) {
-                        val viewModel: OwnedPokemonsViewModel =
-                            daggerViewModel(factory = component.getFactory())
+                            PokemonDetailsScreen(
+                                viewModel = viewModel,
+                                navController = navController,
+                                it.arguments?.getString("id")!!
+                            )
+                        }
 
-                        OwnedPokemonsScreen(viewModel = viewModel, navController = navController)
-                    }
+                        composable(NavigationDestination.OwnedPokemons.destination) {
+                            val viewModel: OwnedPokemonsViewModel =
+                                daggerViewModel(factory = component.getFactory())
 
-                    composable(NavigationDestination.NewPokemon.destination) {
-                        val viewModel: AddNewPokemonViewModel =
-                            daggerViewModel(factory = component.getFactory())
+                            OwnedPokemonsScreen(
+                                viewModel = viewModel,
+                                navController = navController
+                            )
+                        }
 
-                        AddNewPokemonScreen(viewModel = viewModel, navController = navController)
-                    }
+                        composable(NavigationDestination.NewPokemon.destination) {
+                            val viewModel: AddNewPokemonViewModel =
+                                daggerViewModel(factory = component.getFactory())
 
-                    composable(NavigationDestination.PokemonBattle.destination) {
-                        val viewModel: PokemonBattleViewModel =
-                            daggerViewModel(factory = component.getFactory())
+                            AddNewPokemonScreen(
+                                viewModel = viewModel,
+                                navController = navController
+                            )
+                        }
 
-                        PokemonBattleScreen(
-                            viewModel,
-                            it.arguments?.getString("id1")!!,
-                            it.arguments?.getString("id2")!!
-                        )
+                        composable(NavigationDestination.PokemonBattle.destination) {
+                            val viewModel: PokemonBattleViewModel =
+                                daggerViewModel(factory = component.getFactory())
+
+                            PokemonBattleScreen(
+                                viewModel,
+                                it.arguments?.getString("id1")!!,
+                                it.arguments?.getString("id2")!!
+                            )
+                        }
                     }
                 }
             }

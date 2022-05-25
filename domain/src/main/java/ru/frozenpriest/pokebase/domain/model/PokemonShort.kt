@@ -14,8 +14,8 @@ fun PokemonShortResponse.toPokemonShort(): PokemonShort {
     return PokemonShort(
         id = id,
         name = name,
-        speciesName = speciesName,
-        imageUrl = imageUrl,
-        types = types.map { Type.valueOf(it) }
+        speciesName = species.name,
+        imageUrl = species.image,
+        types = listOfNotNull(species.primaryType, species.secondaryType).map { Type.valueOf(it) }
     )
 }
