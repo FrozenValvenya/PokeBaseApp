@@ -7,7 +7,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
+import kotlinx.coroutines.launch
 import ru.frozenpriest.pokebase.domain.model.Category
 import ru.frozenpriest.pokebase.domain.model.Move
 import ru.frozenpriest.pokebase.domain.model.Pokemon
@@ -15,10 +17,14 @@ import ru.frozenpriest.pokebase.domain.model.PokemonShort
 import ru.frozenpriest.pokebase.domain.model.Species
 import ru.frozenpriest.pokebase.domain.model.Stat
 import ru.frozenpriest.pokebase.domain.model.Type
+import ru.frozenpriest.pokebase.domain.pokemon.GetOwnedPokemonShortUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
-class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
+class PokemonDetailsViewModel @Inject constructor(
+    private val getOwnedPokemonShortUseCase: GetOwnedPokemonShortUseCase
+
+) : ViewModel() {
     private val _selectedPokemon = MutableLiveData<Pokemon>()
     val selectedPokemon: LiveData<Pokemon> get() = _selectedPokemon
 
@@ -136,10 +142,13 @@ class PokemonDetailsViewModel @Inject constructor() : ViewModel() {
     }
 
     @Suppress("LongMethod")
-    fun loadPokemons() {
+    fun loadPokemons() = viewModelScope.launch {
         Timber.i("Loading pokemons")
-        _pokemons.postValue(
-            listOf()
-        )
+        val result = getOwnedPokemonShortUseCase.getPokemon()
+        Timber.i("Got pokemons, result is ${if (result.isSuccess) "success" else "failure"}")
+
+        result.onSuccess {
+            _pokemons.postValue(it)
+        }
     }
 }

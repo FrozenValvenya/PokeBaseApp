@@ -6,5 +6,5 @@ object HttpRoutes {
     const val LOGIN_URL = "$AUTH_URL/login"
     const val REGISTER_URL = "$AUTH_URL/register"
 
-    const val OWNED_POKEMON = "$BASE_URL/TODO"
+    const val OWNED_POKEMON = "$BASE_URL/pokemon"
 }

@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.frozenpriest.pokebase.domain.model.PokemonShort
 import ru.frozenpriest.pokebase.domain.pokemon.GetOwnedPokemonShortUseCase
+import timber.log.Timber
 import javax.inject.Inject
 
 class OwnedPokemonsViewModel @Inject constructor(
@@ -15,6 +16,7 @@ class OwnedPokemonsViewModel @Inject constructor(
 
     fun getPokemon() = viewModelScope.launch {
         val result = getOwnedPokemonShortUseCase.getPokemon()
+        Timber.i("Got pokemons, result is $result")
 
         result.onSuccess {
             pokemonFlow.value = it
