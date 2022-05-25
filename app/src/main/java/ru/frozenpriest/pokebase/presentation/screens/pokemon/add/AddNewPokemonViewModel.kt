@@ -7,15 +7,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.frozenpriest.pokebase.domain.model.SpeciesShort
+import ru.frozenpriest.pokebase.domain.pokemon.AddPokemonUseCase
 import ru.frozenpriest.pokebase.domain.pokemon.GetSpeciesUseCase
+import ru.frozenpriest.pokebase.domain.pokemon.PokemonData
 import timber.log.Timber
 import javax.inject.Inject
 
 class AddNewPokemonViewModel @Inject constructor(
-    private val getSpeciesUseCase: GetSpeciesUseCase
+    private val getSpeciesUseCase: GetSpeciesUseCase,
+    private val addPokemonUseCase: AddPokemonUseCase
 ) : ViewModel() {
-    private val _selectedPokemon = MutableLiveData(PokemonData())
-    val selectedPokemon: LiveData<PokemonData> get() = _selectedPokemon
+    private val _selectedPokemon = MutableLiveData(PokemonDataNullable())
+    val selectedPokemon: LiveData<PokemonDataNullable> get() = _selectedPokemon
 
     private val _species = MutableLiveData<List<SpeciesShort>>()
     val species: LiveData<List<SpeciesShort>> get() = _species
@@ -54,21 +57,31 @@ class AddNewPokemonViewModel @Inject constructor(
         _selectedPokemon.value = _selectedPokemon.value?.copy(species = species)
     }
 
-    fun submitPokemon() {
-        _status.value = Status.Waiting
-        // submits pokemon
-
-        // then set status to true after result
-        _status.value = Status.Success
+    fun submitPokemon() = viewModelScope.launch {
+        val pokemonData = _selectedPokemon.value
+        if (pokemonData?.species != null && pokemonData.level != null && pokemonData.name != null) {
+            _status.value = Status.Waiting
+            // submits pokemon
+            val result = addPokemonUseCase.submit(
+                PokemonData(
+                    pokemonData.name,
+                    pokemonData.level,
+                    pokemonData.species
+                )
+            )
+            result.onSuccess {
+                _status.value = Status.Success
+            }
+        }
     }
 }
-
-data class PokemonData(
-    val name: String? = null,
-    val level: Int? = null,
-    val species: SpeciesShort? = null
-)
 
 enum class Status {
     Ready, Waiting, Success
 }
+
+data class PokemonDataNullable(
+    val name: String? = null,
+    val level: Int? = null,
+    val species: SpeciesShort? = null
+)

@@ -39,14 +39,16 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import ru.frozenpriest.pokebase.R
 import ru.frozenpriest.pokebase.domain.model.SpeciesShort
+import ru.frozenpriest.pokebase.domain.pokemon.AddPokemonUseCase
 import ru.frozenpriest.pokebase.domain.pokemon.GetSpeciesUseCase
+import ru.frozenpriest.pokebase.domain.pokemon.PokemonData
 import ru.frozenpriest.pokebase.presentation.common.blackOrWhiteContentColor
 import ru.frozenpriest.pokebase.presentation.common.getColor
 import ru.frozenpriest.pokebase.presentation.theme.PokeBaseTheme
 
 @Composable
 fun AddNewPokemonScreen(viewModel: AddNewPokemonViewModel, navController: NavController) {
-    val pokemonData by viewModel.selectedPokemon.observeAsState(PokemonData())
+    val pokemonData by viewModel.selectedPokemon.observeAsState(PokemonDataNullable())
     val species by viewModel.species.observeAsState(emptyList())
     val isDataFinished by viewModel.readyToCreate.observeAsState(false)
     val status by viewModel.status.observeAsState()
@@ -93,7 +95,7 @@ fun AddNewPokemonScreen(viewModel: AddNewPokemonViewModel, navController: NavCon
 @Composable
 private fun ColumnScope.SpeciesSelector(
     species: List<SpeciesShort>,
-    pokemonData: PokemonData,
+    pokemonData: PokemonDataNullable,
     viewModel: AddNewPokemonViewModel
 ) {
     LazyColumn(
@@ -153,7 +155,7 @@ private fun ColumnScope.SpeciesSelector(
 
 @Composable
 private fun NameField(
-    pokemonData: PokemonData,
+    pokemonData: PokemonDataNullable,
     viewModel: AddNewPokemonViewModel
 ) {
     OutlinedTextField(
@@ -173,7 +175,7 @@ private fun NameField(
 
 @Composable
 private fun LevelField(
-    pokemonData: PokemonData,
+    pokemonData: PokemonDataNullable,
     viewModel: AddNewPokemonViewModel
 ) {
     OutlinedTextField(
@@ -199,11 +201,18 @@ private fun LevelField(
 fun AddNewPreview() {
     PokeBaseTheme {
         AddNewPokemonScreen(
-            viewModel = AddNewPokemonViewModel(object : GetSpeciesUseCase {
-                override suspend fun getSpecies(): Result<List<SpeciesShort>> {
-                    return Result.success(emptyList())
+            viewModel = AddNewPokemonViewModel(
+                object : GetSpeciesUseCase {
+                    override suspend fun getSpecies(): Result<List<SpeciesShort>> {
+                        return Result.success(emptyList())
+                    }
+                },
+                addPokemonUseCase = object : AddPokemonUseCase {
+                    override suspend fun submit(pokemonData: PokemonData): Result<String> {
+                        return Result.success("Pog")
+                    }
                 }
-            }),
+            ),
             navController = rememberNavController()
         )
     }

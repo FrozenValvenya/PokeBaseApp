@@ -12,6 +12,7 @@ import io.ktor.http.contentType
 import ru.frozenpriest.pokebase.data.remote.model.Credentials
 import ru.frozenpriest.pokebase.data.remote.model.MoveResponse
 import ru.frozenpriest.pokebase.data.remote.model.Password
+import ru.frozenpriest.pokebase.data.remote.model.PokemonDataRequest
 import ru.frozenpriest.pokebase.data.remote.model.PokemonResponse
 import ru.frozenpriest.pokebase.data.remote.model.PokemonShortResponse
 import ru.frozenpriest.pokebase.data.remote.model.SpeciesShortResponse
@@ -26,6 +27,7 @@ interface RemoteRepository {
     suspend fun getMoves(speciesId: String): Result<List<MoveResponse>>
     suspend fun getPokemonDetails(pokemonId: String): Result<PokemonResponse>
     suspend fun getSpecies(): Result<List<SpeciesShortResponse>>
+    suspend fun submitNewPokemon(pokemonData: PokemonDataRequest): Result<String>
 }
 
 class RemoteRepositoryImpl @Inject constructor(
@@ -105,6 +107,21 @@ class RemoteRepositoryImpl @Inject constructor(
                 client.get {
                     url(HttpRoutes.SPECIES_URL)
                     contentType(ContentType.Application.Json)
+                }.body()
+            )
+        } catch (e: ResponseException) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun submitNewPokemon(pokemonData: PokemonDataRequest): Result<String> {
+        return try {
+            Result.success(
+                client.post {
+                    url(HttpRoutes.ADD_POKEMON)
+
+                    contentType(ContentType.Application.Json)
+                    setBody(pokemonData)
                 }.body()
             )
         } catch (e: ResponseException) {

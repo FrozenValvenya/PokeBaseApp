@@ -53,6 +53,7 @@ class PokeBaseApp : Application() {
                 override val getMovesUseCase = domainApi.getMovesUseCase
                 override val getPokemonDetailsUseCase = domainApi.getPokemonDetailsUseCase
                 override val getSpeciesUseCase = domainApi.getSpeciesUseCase
+                override val addPokemonUseCase = domainApi.addPokemonUseCase
             }
         }.dependencies
     }
