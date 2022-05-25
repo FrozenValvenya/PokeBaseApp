@@ -50,6 +50,7 @@ class PokeBaseApp : Application() {
                 override val dataStoreRepository: DataStoreRepository = dataApi.dataStoreRepository
                 override val getOwnedPokemonShortUseCase: GetOwnedPokemonShortUseCase =
                     domainApi.getOwnedPokemonShortUseCase
+                override val getMovesUseCase = domainApi.getMovesUseCase
             }
         }.dependencies
     }

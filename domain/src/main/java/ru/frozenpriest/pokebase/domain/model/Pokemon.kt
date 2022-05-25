@@ -1,5 +1,7 @@
 package ru.frozenpriest.pokebase.domain.model
 
+import ru.frozenpriest.pokebase.data.remote.model.MoveResponse
+
 data class Pokemon(
     val id: String,
     val name: String,
@@ -9,6 +11,7 @@ data class Pokemon(
 )
 
 data class Species(
+    val id: String,
     val name: String,
     val image: String,
     val height: Int,
@@ -58,6 +61,17 @@ data class Move(
     val type: Type,
     val category: Category,
     val power: Int?,
-    val accuracy: Float,
+    val accuracy: Float?,
     val pp: Int,
 )
+
+fun MoveResponse.toMove(): Move {
+    return Move(
+        name = name,
+        type = Type.valueOf(type),
+        category = Category.valueOf(category),
+        power = power,
+        accuracy = accuracy?.toFloat(),
+        pp = pp
+    )
+}

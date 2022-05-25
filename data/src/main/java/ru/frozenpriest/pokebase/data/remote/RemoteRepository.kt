@@ -11,6 +11,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.coroutines.CancellationException
 import ru.frozenpriest.pokebase.data.remote.model.Credentials
+import ru.frozenpriest.pokebase.data.remote.model.MoveResponse
 import ru.frozenpriest.pokebase.data.remote.model.Password
 import ru.frozenpriest.pokebase.data.remote.model.PokemonShortResponse
 import ru.frozenpriest.pokebase.data.remote.model.TokenResponse
@@ -21,6 +22,7 @@ interface RemoteRepository {
     suspend fun login(login: String, password: String): Result<TokenResponse>
     suspend fun register(login: String, password: String): Result<TokenResponse>
     suspend fun getOwnedPokemon(): Result<List<PokemonShortResponse>>
+    suspend fun getMoves(speciesId: String): Result<List<MoveResponse>>
 }
 
 class RemoteRepositoryImpl @Inject constructor(
@@ -61,6 +63,20 @@ class RemoteRepositoryImpl @Inject constructor(
             Result.success(
                 client.get {
                     url(HttpRoutes.OWNED_POKEMON)
+                    contentType(ContentType.Application.Json)
+                }.body()
+            )
+        } catch (e: Exception) {
+            if (e is ResponseException) throw CancellationException()
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getMoves(speciesId: String): Result<List<MoveResponse>> {
+        return try {
+            Result.success(
+                client.get {
+                    url(HttpRoutes.getMovesRoute(speciesId))
                     contentType(ContentType.Application.Json)
                 }.body()
             )

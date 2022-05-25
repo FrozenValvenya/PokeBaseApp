@@ -184,7 +184,7 @@ fun MovesRow(modifier: Modifier, move: Move, onClick: (() -> Unit)? = null) {
             modifier = Modifier.weight(1f)
         )
         Text(
-            text = (move.accuracy * 100).toInt().toString() + " %",
+            text = (move.accuracy)?.toInt().toString() + " %",
             Modifier.weight(1f),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,

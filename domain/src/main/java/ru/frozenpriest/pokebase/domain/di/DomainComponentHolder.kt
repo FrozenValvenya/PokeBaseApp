@@ -2,6 +2,7 @@ package ru.frozenpriest.pokebase.domain.di
 
 import ru.frozenpriest.pokebase.data.remote.RemoteRepository
 import ru.frozenpriest.pokebase.domain.login.LoginRegisterUseCase
+import ru.frozenpriest.pokebase.domain.pokemon.GetMovesUseCase
 import ru.frozenpriest.pokebase.domain.pokemon.GetOwnedPokemonShortUseCase
 import ru.frozenpriest.pokebase.injector.BaseFeatureAPI
 import ru.frozenpriest.pokebase.injector.BaseFeatureDependencies
@@ -30,4 +31,5 @@ interface DomainFeatureDependencies : BaseFeatureDependencies {
 interface DomainFeatureApi : BaseFeatureAPI {
     val loginRegisterUseCase: LoginRegisterUseCase
     val getOwnedPokemonShortUseCase: GetOwnedPokemonShortUseCase
+    val getMovesUseCase: GetMovesUseCase
 }

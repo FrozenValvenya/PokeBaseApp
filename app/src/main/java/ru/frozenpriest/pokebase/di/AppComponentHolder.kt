@@ -2,6 +2,7 @@ package ru.frozenpriest.pokebase.di
 
 import ru.frozenpriest.pokebase.data.local.DataStoreRepository
 import ru.frozenpriest.pokebase.domain.login.LoginRegisterUseCase
+import ru.frozenpriest.pokebase.domain.pokemon.GetMovesUseCase
 import ru.frozenpriest.pokebase.domain.pokemon.GetOwnedPokemonShortUseCase
 import ru.frozenpriest.pokebase.injector.BaseFeatureAPI
 import ru.frozenpriest.pokebase.injector.BaseFeatureDependencies
@@ -28,6 +29,7 @@ interface AppFeatureDependencies : BaseFeatureDependencies {
     val dataStoreRepository: DataStoreRepository
 
     val getOwnedPokemonShortUseCase: GetOwnedPokemonShortUseCase
+    val getMovesUseCase: GetMovesUseCase
 }
 
 interface AppFeatureApi : BaseFeatureAPI
