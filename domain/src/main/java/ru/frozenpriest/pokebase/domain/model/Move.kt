@@ -3,6 +3,7 @@ package ru.frozenpriest.pokebase.domain.model
 import ru.frozenpriest.pokebase.data.remote.model.MoveResponse
 
 data class Move(
+    val id: String,
     val name: String,
     val type: Type,
     val category: Category,
@@ -13,6 +14,7 @@ data class Move(
 
 fun MoveResponse.toMove(): Move {
     return Move(
+        id = moveId.toString(),
         name = name,
         type = Type.valueOf(type),
         category = Category.valueOf(category),

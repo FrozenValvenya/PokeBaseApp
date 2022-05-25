@@ -14,4 +14,6 @@ object HttpRoutes {
     const val SPECIES_URL = "$BASE_URL/species"
     private const val MOVES_URL = "$SPECIES_URL/{speciesId}/moves/"
     fun getMovesRoute(speciesId: String) = MOVES_URL.replace("{speciesId}", speciesId)
+
+    const val ADD_MOVE = "$OWNED_POKEMON/move"
 }

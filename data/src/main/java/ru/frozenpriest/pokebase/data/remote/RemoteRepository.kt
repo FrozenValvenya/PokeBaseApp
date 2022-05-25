@@ -3,6 +3,7 @@ package ru.frozenpriest.pokebase.data.remote
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ResponseException
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -13,6 +14,7 @@ import ru.frozenpriest.pokebase.data.remote.model.Credentials
 import ru.frozenpriest.pokebase.data.remote.model.MoveResponse
 import ru.frozenpriest.pokebase.data.remote.model.Password
 import ru.frozenpriest.pokebase.data.remote.model.PokemonDataRequest
+import ru.frozenpriest.pokebase.data.remote.model.PokemonMoveRequest
 import ru.frozenpriest.pokebase.data.remote.model.PokemonResponse
 import ru.frozenpriest.pokebase.data.remote.model.PokemonShortResponse
 import ru.frozenpriest.pokebase.data.remote.model.SpeciesShortResponse
@@ -28,6 +30,8 @@ interface RemoteRepository {
     suspend fun getPokemonDetails(pokemonId: String): Result<PokemonResponse>
     suspend fun getSpecies(): Result<List<SpeciesShortResponse>>
     suspend fun submitNewPokemon(pokemonData: PokemonDataRequest): Result<String>
+    suspend fun addMove(pokemonId: String, moveId: String): Result<String>
+    suspend fun removeMove(pokemonId: String, moveId: String): Result<String>
 }
 
 class RemoteRepositoryImpl @Inject constructor(
@@ -122,6 +126,36 @@ class RemoteRepositoryImpl @Inject constructor(
 
                     contentType(ContentType.Application.Json)
                     setBody(pokemonData)
+                }.body()
+            )
+        } catch (e: ResponseException) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun addMove(pokemonId: String, moveId: String): Result<String> {
+        return try {
+            Result.success(
+                client.post {
+                    url(HttpRoutes.ADD_MOVE)
+
+                    contentType(ContentType.Application.Json)
+                    setBody(PokemonMoveRequest(pokemonId.toInt(), moveId.toInt()))
+                }.body()
+            )
+        } catch (e: ResponseException) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun removeMove(pokemonId: String, moveId: String): Result<String> {
+        return try {
+            Result.success(
+                client.delete {
+                    url(HttpRoutes.ADD_MOVE)
+
+                    contentType(ContentType.Application.Json)
+                    setBody(PokemonMoveRequest(pokemonId.toInt(), moveId.toInt()))
                 }.body()
             )
         } catch (e: ResponseException) {

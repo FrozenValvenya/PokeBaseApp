@@ -67,12 +67,16 @@ class PokemonDetailsViewModel @Inject constructor(
         }
     }
 
-    fun removeMove(move: Move) {
+    fun removeMove(move: Move) = viewModelScope.launch {
         Timber.e("Remove move $move")
+        getMovesUseCase.removeMove(selectedPokemon.value!!.id, move.id)
+        loadPokemon(selectedPokemon.value!!.id)
     }
 
-    fun addMove(move: Move) {
+    fun addMove(move: Move) = viewModelScope.launch {
         Timber.e("Add move $move")
+        getMovesUseCase.addMove(selectedPokemon.value!!.id, move.id)
+        loadPokemon(selectedPokemon.value!!.id)
     }
 
     fun loadPokemons() = viewModelScope.launch {

@@ -8,6 +8,8 @@ import javax.inject.Inject
 
 interface GetMovesUseCase {
     suspend fun getMoves(pokemonSpecies: Species): Result<List<Move>>
+    suspend fun addMove(pokemonId: String, moveId: String)
+    suspend fun removeMove(pokemonId: String, moveId: String)
 }
 
 class GetMovesUseCaseImpl @Inject constructor(
@@ -17,5 +19,13 @@ class GetMovesUseCaseImpl @Inject constructor(
         return pokeBaseRepository.getMoves(pokemonSpecies.id).map { list ->
             list.map { movesResponse -> movesResponse.toMove() }
         }
+    }
+
+    override suspend fun addMove(pokemonId: String, moveId: String) {
+        pokeBaseRepository.addMove(pokemonId, moveId)
+    }
+
+    override suspend fun removeMove(pokemonId: String, moveId: String) {
+        pokeBaseRepository.removeMove(pokemonId, moveId)
     }
 }
