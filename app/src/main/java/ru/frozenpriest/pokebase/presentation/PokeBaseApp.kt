@@ -12,6 +12,7 @@ import ru.frozenpriest.pokebase.domain.di.DomainComponentHolder
 import ru.frozenpriest.pokebase.domain.di.DomainFeatureApi
 import ru.frozenpriest.pokebase.domain.di.DomainFeatureDependencies
 import ru.frozenpriest.pokebase.domain.login.LoginRegisterUseCase
+import ru.frozenpriest.pokebase.domain.pokemon.GetOwnedPokemonShortUseCase
 import ru.frozenpriest.pokebase.injector.BaseDependencyHolder
 import ru.frozenpriest.pokebase.injector.BaseFeatureDependencies
 import ru.frozenpriest.pokebase.injector.DependencyHolder0
@@ -47,6 +48,8 @@ class PokeBaseApp : Application() {
                 override val loginRegisterUseCase: LoginRegisterUseCase =
                     domainApi.loginRegisterUseCase
                 override val dataStoreRepository: DataStoreRepository = dataApi.dataStoreRepository
+                override val getOwnedPokemonShortUseCase: GetOwnedPokemonShortUseCase =
+                    domainApi.getOwnedPokemonShortUseCase
             }
         }.dependencies
     }

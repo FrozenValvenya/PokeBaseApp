@@ -124,7 +124,7 @@ fun PokemonDetailsScreen(
                             navController.navigate(
                                 NavigationDestination.PokemonBattle.destination.withTwoPokemon(
                                     selectedPokemon.value!!.id,
-                                    it.id
+                                    it
                                 )
                             )
                         },
@@ -138,7 +138,7 @@ fun PokemonDetailsScreen(
 
 @Composable
 fun BoxScope.SelectOpponentAlert(
-    onPokemonSelected: (Pokemon) -> Unit,
+    onPokemonSelected: (String) -> Unit,
     viewModel: PokemonDetailsViewModel
 ) {
     Card(
@@ -158,7 +158,7 @@ fun BoxScope.SelectOpponentAlert(
                     modifier = Modifier.padding(8.dp),
                     pokemon = pokemon
                 ) {
-                    onPokemonSelected(pokemon)
+                    onPokemonSelected(pokemon.id)
                 }
             }
         }
