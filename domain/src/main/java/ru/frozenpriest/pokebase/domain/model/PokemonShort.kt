@@ -12,8 +12,8 @@ data class PokemonShort(
 
 fun PokemonShortResponse.toPokemonShort(): PokemonShort {
     return PokemonShort(
-        id = id,
-        name = name,
+        id = pokemonId,
+        name = nickname,
         speciesName = species.name,
         imageUrl = species.image,
         types = listOfNotNull(species.primaryType, species.secondaryType).map { Type.valueOf(it) }

@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PokemonDataRequest(
-    val name: String,
+    val nickname: String,
     val level: Int,
-    val speciesId: String
+    val speciesId: Int
 )

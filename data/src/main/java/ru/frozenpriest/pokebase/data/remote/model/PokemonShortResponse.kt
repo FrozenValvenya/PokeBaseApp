@@ -4,8 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PokemonShortResponse(
-    val id: String,
-    val name: String,
+    val pokemonId: String,
+    val nickname: String,
     val species: SpeciesShortResponse,
     val level: Int
 )

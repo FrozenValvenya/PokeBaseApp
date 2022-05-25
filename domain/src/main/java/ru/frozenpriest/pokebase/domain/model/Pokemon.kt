@@ -10,7 +10,8 @@ data class Pokemon(
     val name: String,
     val level: Int,
     val species: Species,
-    val moves: List<Move>
+    val moves: List<Move>,
+    val stats: Stats,
 )
 
 fun PokemonResponse.toPokemon(): Pokemon {
@@ -19,7 +20,8 @@ fun PokemonResponse.toPokemon(): Pokemon {
         this.nickname,
         this.level,
         this.species.toSpecies(),
-        this.moves.map { it.toMove() }
+        this.moves.map { it.toMove() },
+        this.stats.toStats()
     )
 }
 

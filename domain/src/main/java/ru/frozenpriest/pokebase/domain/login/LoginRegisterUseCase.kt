@@ -17,7 +17,7 @@ class LoginRegisterUseCaseImpl @Inject constructor(
     override suspend fun login(login: String, password: String): Result<String> =
         withContext(Dispatchers.IO) {
             return@withContext try {
-                pokeBaseRepository.login(login, password).map { it.token }
+                pokeBaseRepository.login(login, password).map { it.JWT }
             } catch (e: NetworkErrorException) {
                 Result.failure(e)
             }
@@ -26,7 +26,7 @@ class LoginRegisterUseCaseImpl @Inject constructor(
     override suspend fun register(login: String, password: String): Result<String> =
         withContext(Dispatchers.IO) {
             return@withContext try {
-                pokeBaseRepository.register(login, password).map { it.token }
+                pokeBaseRepository.register(login, password).map { it.JWT }
             } catch (e: NetworkErrorException) {
                 Result.failure(e)
             }

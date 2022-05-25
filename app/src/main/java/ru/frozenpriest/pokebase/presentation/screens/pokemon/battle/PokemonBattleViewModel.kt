@@ -4,14 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import ru.frozenpriest.pokebase.domain.model.Move
 import ru.frozenpriest.pokebase.domain.model.Pokemon
+import ru.frozenpriest.pokebase.domain.pokemon.GetDamageUseCase
+import ru.frozenpriest.pokebase.domain.pokemon.GetPokemonDetailsUseCase
 import javax.inject.Inject
 
 @Suppress("UnusedPrivateMember", "LongMethod")
 class PokemonBattleViewModel @Inject constructor(
-    //
+    private val getPokemonDetailsUseCase: GetPokemonDetailsUseCase,
+    private val getDamageUseCase: GetDamageUseCase
 ) : ViewModel() {
     private val _pokemons = MutableLiveData<Pair<PokemonInBattle, PokemonInBattle>>()
     val pokemons: LiveData<Pair<PokemonInBattle, PokemonInBattle>> get() = _pokemons
@@ -26,16 +30,39 @@ class PokemonBattleViewModel @Inject constructor(
 
     fun loadPokemon(id1: String, id2: String) {
         viewModelScope.launch {
+            val first = async {
+                val result = getPokemonDetailsUseCase.getPokemonDetails(id1)
+                val pokemon = result.getOrThrow()
+                PokemonInBattle(pokemon.stats.hp.value, pokemon)
+            }
+            val second = async {
+                val result = getPokemonDetailsUseCase.getPokemonDetails(id2)
+                val pokemon = result.getOrThrow()
+                PokemonInBattle(pokemon.stats.hp.value, pokemon)
+            }
+
+            _pokemons.postValue(first.await() to second.await())
         }
     }
 
-    fun calculateDamage(move: Move) {
-        val damage = 5
+    fun calculateDamage(move: Move) = viewModelScope.launch {
         pokemons.value?.let {
             if (turn.value == true) {
-                _pokemons.postValue(it.first to it.second.copy(hp = it.second.hp - damage))
+                val damage = getDamageUseCase.calculateDamage(
+                    it.first.pokemon.id.toInt(),
+                    it.second.pokemon.id.toInt(),
+                    move.id.toInt()
+                )
+
+                _pokemons.postValue(it.first to it.second.copy(hp = it.second.hp - damage.getOrThrow()))
             } else {
-                _pokemons.postValue(it.first.copy(hp = it.first.hp - damage) to it.second)
+                val damage = getDamageUseCase.calculateDamage(
+                    it.second.pokemon.id.toInt(),
+                    it.first.pokemon.id.toInt(),
+                    move.id.toInt()
+                )
+
+                _pokemons.postValue(it.first.copy(hp = it.first.hp - damage.getOrThrow()) to it.second)
             }
         }
     }

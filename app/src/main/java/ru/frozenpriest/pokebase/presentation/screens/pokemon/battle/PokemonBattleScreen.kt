@@ -36,6 +36,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import ru.frozenpriest.pokebase.R
 import ru.frozenpriest.pokebase.domain.model.Move
+import ru.frozenpriest.pokebase.domain.model.Pokemon
+import ru.frozenpriest.pokebase.domain.pokemon.GetDamageUseCase
+import ru.frozenpriest.pokebase.domain.pokemon.GetPokemonDetailsUseCase
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.MovesHeader
 import ru.frozenpriest.pokebase.presentation.screens.pokemon.details.pages.MovesRow
 import ru.frozenpriest.pokebase.presentation.theme.PokeBaseTheme
@@ -139,7 +142,7 @@ fun ColumnScope.PokemonWithHealthRow(pokemon: PokemonInBattle, inverted: Boolean
                 ) {
                     Text(text = pokemon.hp.toString())
                     LinearProgressIndicator(
-                        progress = pokemon.hp / pokemon.pokemon.species.baseStats.hp.value.toFloat()
+                        progress = pokemon.hp / pokemon.pokemon.stats.hp.value.toFloat()
                     )
                 }
             }
@@ -161,7 +164,22 @@ fun ColumnScope.PokemonWithHealthRow(pokemon: PokemonInBattle, inverted: Boolean
 fun PokeBattlePreview() {
     PokeBaseTheme {
         PokemonBattleScreen(
-            PokemonBattleViewModel(),
+            PokemonBattleViewModel(
+                object : GetPokemonDetailsUseCase {
+                    override suspend fun getPokemonDetails(pokemonId: String): Result<Pokemon> {
+                        return Result.failure(NotImplementedError())
+                    }
+                },
+                object : GetDamageUseCase {
+                    override suspend fun calculateDamage(
+                        attackerId: Int,
+                        defenderId: Int,
+                        moveId: Int
+                    ): Result<Int> {
+                        return Result.success(10)
+                    }
+                }
+            ),
             "1",
             "2"
         )

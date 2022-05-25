@@ -7,6 +7,8 @@ import ru.frozenpriest.pokebase.domain.login.LoginRegisterUseCase
 import ru.frozenpriest.pokebase.domain.login.LoginRegisterUseCaseImpl
 import ru.frozenpriest.pokebase.domain.pokemon.AddPokemonUseCase
 import ru.frozenpriest.pokebase.domain.pokemon.AddPokemonUseCaseImpl
+import ru.frozenpriest.pokebase.domain.pokemon.GetDamageUseCase
+import ru.frozenpriest.pokebase.domain.pokemon.GetDamageUseCaseImpl
 import ru.frozenpriest.pokebase.domain.pokemon.GetMovesUseCase
 import ru.frozenpriest.pokebase.domain.pokemon.GetMovesUseCaseImpl
 import ru.frozenpriest.pokebase.domain.pokemon.GetOwnedPokemonShortUseCase
@@ -41,4 +43,8 @@ internal class DomainModule {
     @Provides
     fun provideAddPokemonUseCase(repository: RemoteRepository): AddPokemonUseCase =
         AddPokemonUseCaseImpl(repository)
+
+    @Provides
+    fun provideGetDamageUseCase(repository: RemoteRepository): GetDamageUseCase =
+        GetDamageUseCaseImpl(repository)
 }

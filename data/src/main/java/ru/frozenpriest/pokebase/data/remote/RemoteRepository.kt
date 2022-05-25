@@ -6,14 +6,18 @@ import io.ktor.client.plugins.ResponseException
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import ru.frozenpriest.pokebase.data.remote.model.Credentials
+import ru.frozenpriest.pokebase.data.remote.model.DamageRequest
+import ru.frozenpriest.pokebase.data.remote.model.DamageResponse
 import ru.frozenpriest.pokebase.data.remote.model.MoveResponse
 import ru.frozenpriest.pokebase.data.remote.model.Password
 import ru.frozenpriest.pokebase.data.remote.model.PokemonDataRequest
+import ru.frozenpriest.pokebase.data.remote.model.PokemonIdResponse
 import ru.frozenpriest.pokebase.data.remote.model.PokemonMoveRequest
 import ru.frozenpriest.pokebase.data.remote.model.PokemonResponse
 import ru.frozenpriest.pokebase.data.remote.model.PokemonShortResponse
@@ -32,6 +36,7 @@ interface RemoteRepository {
     suspend fun submitNewPokemon(pokemonData: PokemonDataRequest): Result<String>
     suspend fun addMove(pokemonId: String, moveId: String): Result<String>
     suspend fun removeMove(pokemonId: String, moveId: String): Result<String>
+    suspend fun getDamage(damageRequest: DamageRequest): Result<Int>
 }
 
 class RemoteRepositoryImpl @Inject constructor(
@@ -121,12 +126,12 @@ class RemoteRepositoryImpl @Inject constructor(
     override suspend fun submitNewPokemon(pokemonData: PokemonDataRequest): Result<String> {
         return try {
             Result.success(
-                client.post {
+                client.put {
                     url(HttpRoutes.ADD_POKEMON)
 
                     contentType(ContentType.Application.Json)
                     setBody(pokemonData)
-                }.body()
+                }.body<PokemonIdResponse>().pokemonId.toString()
             )
         } catch (e: ResponseException) {
             Result.failure(e)
@@ -136,7 +141,7 @@ class RemoteRepositoryImpl @Inject constructor(
     override suspend fun addMove(pokemonId: String, moveId: String): Result<String> {
         return try {
             Result.success(
-                client.post {
+                client.put {
                     url(HttpRoutes.ADD_MOVE)
 
                     contentType(ContentType.Application.Json)
@@ -157,6 +162,21 @@ class RemoteRepositoryImpl @Inject constructor(
                     contentType(ContentType.Application.Json)
                     setBody(PokemonMoveRequest(pokemonId.toInt(), moveId.toInt()))
                 }.body()
+            )
+        } catch (e: ResponseException) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getDamage(damageRequest: DamageRequest): Result<Int> {
+        return try {
+            Result.success(
+                client.post {
+                    url(HttpRoutes.DAMAGE)
+
+                    contentType(ContentType.Application.Json)
+                    setBody(damageRequest)
+                }.body<DamageResponse>().damage
             )
         } catch (e: ResponseException) {
             Result.failure(e)

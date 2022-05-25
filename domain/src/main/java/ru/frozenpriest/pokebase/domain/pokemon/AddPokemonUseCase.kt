@@ -17,7 +17,7 @@ class AddPokemonUseCaseImpl @Inject constructor(
             PokemonDataRequest(
                 pokemonData.name,
                 pokemonData.level,
-                pokemonData.species.speciesId
+                pokemonData.species.speciesId.toInt()
             )
         )
     }
