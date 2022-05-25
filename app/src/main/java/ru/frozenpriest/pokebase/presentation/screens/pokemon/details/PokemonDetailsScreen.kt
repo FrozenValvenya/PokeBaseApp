@@ -83,7 +83,9 @@ fun PokemonDetailsScreen(
     navController: NavController,
     pokemonId: String
 ) {
-    viewModel.setId(pokemonId)
+    LaunchedEffect(key1 = null) {
+        viewModel.loadPokemon(pokemonId)
+    }
     val selectedPokemon = viewModel.selectedPokemon.observeAsState()
     selectedPokemon.value?.let { pokemon ->
         var dominantColor by remember {

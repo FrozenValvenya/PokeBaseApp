@@ -139,7 +139,7 @@ fun ColumnScope.PokemonWithHealthRow(pokemon: PokemonInBattle, inverted: Boolean
                 ) {
                     Text(text = pokemon.hp.toString())
                     LinearProgressIndicator(
-                        progress = pokemon.hp / pokemon.pokemon.species.hp.value.toFloat()
+                        progress = pokemon.hp / pokemon.pokemon.species.baseStats.hp.value.toFloat()
                     )
                 }
             }

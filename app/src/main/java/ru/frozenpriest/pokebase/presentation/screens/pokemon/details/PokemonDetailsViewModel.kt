@@ -15,12 +15,14 @@ import ru.frozenpriest.pokebase.domain.model.Pokemon
 import ru.frozenpriest.pokebase.domain.model.PokemonShort
 import ru.frozenpriest.pokebase.domain.pokemon.GetMovesUseCase
 import ru.frozenpriest.pokebase.domain.pokemon.GetOwnedPokemonShortUseCase
+import ru.frozenpriest.pokebase.domain.pokemon.GetPokemonDetailsUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
 class PokemonDetailsViewModel @Inject constructor(
+    private val getPokemonDetailsUseCase: GetPokemonDetailsUseCase,
     private val getOwnedPokemonShortUseCase: GetOwnedPokemonShortUseCase,
-    private val getMovesUseCase: GetMovesUseCase
+    private val getMovesUseCase: GetMovesUseCase,
 
 ) : ViewModel() {
     private val _selectedPokemon = MutableLiveData<Pokemon>()
@@ -55,9 +57,14 @@ class PokemonDetailsViewModel @Inject constructor(
         }
     }
 
-    @Suppress("UnusedPrivateMember")
-    fun setId(pokemonId: String) {
-        // later should be used on flow
+    fun loadPokemon(pokemonId: String) = viewModelScope.launch {
+        Timber.i("Loading pokemon details")
+        val result = getPokemonDetailsUseCase.getPokemonDetails(pokemonId)
+        Timber.i("Got pokemon, result is $result")
+
+        result.onSuccess {
+            _selectedPokemon.postValue(it)
+        }
     }
 
     fun removeMove(move: Move) {
@@ -71,7 +78,7 @@ class PokemonDetailsViewModel @Inject constructor(
     fun loadPokemons() = viewModelScope.launch {
         Timber.i("Loading pokemons")
         val result = getOwnedPokemonShortUseCase.getPokemon()
-        Timber.i("Got pokemons, result is ${if (result.isSuccess) "success" else "failure"}")
+        Timber.i("Got pokemons, result is $result")
 
         result.onSuccess {
             _pokemons.postValue(it)

@@ -7,6 +7,7 @@ object HttpRoutes {
     const val REGISTER_URL = "$AUTH_URL/register"
 
     const val OWNED_POKEMON = "$BASE_URL/pokemon"
+    fun getPokemonDetailsRoute(pokemonId: String) = "$OWNED_POKEMON/$pokemonId"
 
     const val SPECIES_URL = "$BASE_URL/species"
     private const val MOVES_URL = "$SPECIES_URL/{speciesId}/moves/"

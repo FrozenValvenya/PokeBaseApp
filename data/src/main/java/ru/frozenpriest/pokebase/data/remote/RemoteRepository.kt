@@ -9,10 +9,10 @@ import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import kotlinx.coroutines.CancellationException
 import ru.frozenpriest.pokebase.data.remote.model.Credentials
 import ru.frozenpriest.pokebase.data.remote.model.MoveResponse
 import ru.frozenpriest.pokebase.data.remote.model.Password
+import ru.frozenpriest.pokebase.data.remote.model.PokemonResponse
 import ru.frozenpriest.pokebase.data.remote.model.PokemonShortResponse
 import ru.frozenpriest.pokebase.data.remote.model.TokenResponse
 import ru.frozenpriest.pokebase.data.remote.model.Username
@@ -23,6 +23,7 @@ interface RemoteRepository {
     suspend fun register(login: String, password: String): Result<TokenResponse>
     suspend fun getOwnedPokemon(): Result<List<PokemonShortResponse>>
     suspend fun getMoves(speciesId: String): Result<List<MoveResponse>>
+    suspend fun getPokemonDetails(pokemonId: String): Result<PokemonResponse>
 }
 
 class RemoteRepositoryImpl @Inject constructor(
@@ -52,8 +53,7 @@ class RemoteRepositoryImpl @Inject constructor(
                     setBody(Credentials(Username(login), Password(password)))
                 }.body()
             )
-        } catch (e: Exception) {
-            if (e is ResponseException) throw CancellationException()
+        } catch (e: ResponseException) {
             Result.failure(e)
         }
     }
@@ -66,8 +66,7 @@ class RemoteRepositoryImpl @Inject constructor(
                     contentType(ContentType.Application.Json)
                 }.body()
             )
-        } catch (e: Exception) {
-            if (e is ResponseException) throw CancellationException()
+        } catch (e: ResponseException) {
             Result.failure(e)
         }
     }
@@ -80,8 +79,20 @@ class RemoteRepositoryImpl @Inject constructor(
                     contentType(ContentType.Application.Json)
                 }.body()
             )
-        } catch (e: Exception) {
-            if (e is ResponseException) throw CancellationException()
+        } catch (e: ResponseException) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getPokemonDetails(pokemonId: String): Result<PokemonResponse> {
+        return try {
+            Result.success(
+                client.get {
+                    url(HttpRoutes.getPokemonDetailsRoute(pokemonId))
+                    contentType(ContentType.Application.Json)
+                }.body()
+            )
+        } catch (e: ResponseException) {
             Result.failure(e)
         }
     }
