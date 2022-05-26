@@ -24,6 +24,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +39,8 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import ru.frozenpriest.pokebase.R
-import ru.frozenpriest.pokebase.domain.model.Pokemon
+import ru.frozenpriest.pokebase.domain.model.PokemonShort
+import ru.frozenpriest.pokebase.domain.pokemon.GetOwnedPokemonShortUseCase
 import ru.frozenpriest.pokebase.presentation.NavigationDestination
 import ru.frozenpriest.pokebase.presentation.common.getColor
 import ru.frozenpriest.pokebase.presentation.theme.PokeBaseTheme
@@ -50,6 +52,10 @@ fun OwnedPokemonsScreen(
     navController: NavController
 ) {
     val pokemonState = viewModel.pokemonFlow.collectAsState(initial = emptyList())
+
+    LaunchedEffect(key1 = null) {
+        viewModel.getPokemon()
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -81,7 +87,7 @@ fun OwnedPokemonsScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun OwnedPokemons(
-    pokemons: List<Pokemon>,
+    pokemons: List<PokemonShort>,
     navController: NavController
 ) {
 
@@ -118,10 +124,10 @@ private fun OwnedPokemons(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun PokemonItem(modifier: Modifier, pokemon: Pokemon, onClick: () -> Unit) {
+fun PokemonItem(modifier: Modifier, pokemon: PokemonShort, onClick: () -> Unit) {
     Card(
         modifier = modifier,
-        backgroundColor = pokemon.species.types.first().getColor(),
+        backgroundColor = pokemon.types.first().getColor(),
         shape = RoundedCornerShape(16.dp),
         onClick = {
             onClick()
@@ -142,10 +148,10 @@ fun PokemonItem(modifier: Modifier, pokemon: Pokemon, onClick: () -> Unit) {
                     color = Color.White
                 )
                 Text(
-                    text = pokemon.species.name,
+                    text = pokemon.speciesName,
                     color = Color.White
                 )
-                pokemon.species.types.forEach { type ->
+                pokemon.types.forEach { type ->
                     Text(
                         text = type.name,
                         color = Color.White,
@@ -162,7 +168,7 @@ fun PokemonItem(modifier: Modifier, pokemon: Pokemon, onClick: () -> Unit) {
             }
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(pokemon.species.image)
+                    .data(pokemon.imageUrl)
                     .crossfade(true)
                     .build(),
                 modifier = Modifier
@@ -179,7 +185,11 @@ fun PokemonItem(modifier: Modifier, pokemon: Pokemon, onClick: () -> Unit) {
 fun OwnedPokemonsScreenPreview() {
     PokeBaseTheme {
         OwnedPokemonsScreen(
-            viewModel = OwnedPokemonsViewModel(),
+            viewModel = OwnedPokemonsViewModel(object : GetOwnedPokemonShortUseCase {
+                override suspend fun getPokemon(): Result<List<PokemonShort>> {
+                    return Result.success(emptyList())
+                }
+            }),
             navController = rememberNavController()
         )
     }

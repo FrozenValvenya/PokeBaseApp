@@ -29,7 +29,7 @@ fun EvolutionPokemon(pokemon: Pokemon) {
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
         modifier = Modifier.padding(8.dp)
     ) {
-        items(pokemon.species.possibleEvolutions) { evolution ->
+        items(pokemon.species.evolutions) { evolution ->
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally

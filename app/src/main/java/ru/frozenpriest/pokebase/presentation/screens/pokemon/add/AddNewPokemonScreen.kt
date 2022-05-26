@@ -38,17 +38,24 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import ru.frozenpriest.pokebase.R
-import ru.frozenpriest.pokebase.domain.model.Species
+import ru.frozenpriest.pokebase.domain.model.SpeciesShort
+import ru.frozenpriest.pokebase.domain.pokemon.AddPokemonUseCase
+import ru.frozenpriest.pokebase.domain.pokemon.GetSpeciesUseCase
+import ru.frozenpriest.pokebase.domain.pokemon.PokemonData
 import ru.frozenpriest.pokebase.presentation.common.blackOrWhiteContentColor
 import ru.frozenpriest.pokebase.presentation.common.getColor
 import ru.frozenpriest.pokebase.presentation.theme.PokeBaseTheme
 
 @Composable
 fun AddNewPokemonScreen(viewModel: AddNewPokemonViewModel, navController: NavController) {
-    val pokemonData by viewModel.selectedPokemon.observeAsState(PokemonData())
+    val pokemonData by viewModel.selectedPokemon.observeAsState(PokemonDataNullable())
     val species by viewModel.species.observeAsState(emptyList())
     val isDataFinished by viewModel.readyToCreate.observeAsState(false)
     val status by viewModel.status.observeAsState()
+
+    LaunchedEffect(key1 = null) {
+        viewModel.getSpecies()
+    }
 
     LaunchedEffect(key1 = status) {
         if (status == Status.Success) navController.popBackStack()
@@ -87,8 +94,8 @@ fun AddNewPokemonScreen(viewModel: AddNewPokemonViewModel, navController: NavCon
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun ColumnScope.SpeciesSelector(
-    species: List<Species>,
-    pokemonData: PokemonData,
+    species: List<SpeciesShort>,
+    pokemonData: PokemonDataNullable,
     viewModel: AddNewPokemonViewModel
 ) {
     LazyColumn(
@@ -99,7 +106,7 @@ private fun ColumnScope.SpeciesSelector(
         items(species) { species ->
             Card(
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                backgroundColor = if (species == pokemonData.species)
+                backgroundColor = if (species.speciesId == pokemonData.species?.speciesId)
                     MaterialTheme.colors.primaryVariant
                 else
                     MaterialTheme.colors.background,
@@ -148,7 +155,7 @@ private fun ColumnScope.SpeciesSelector(
 
 @Composable
 private fun NameField(
-    pokemonData: PokemonData,
+    pokemonData: PokemonDataNullable,
     viewModel: AddNewPokemonViewModel
 ) {
     OutlinedTextField(
@@ -168,7 +175,7 @@ private fun NameField(
 
 @Composable
 private fun LevelField(
-    pokemonData: PokemonData,
+    pokemonData: PokemonDataNullable,
     viewModel: AddNewPokemonViewModel
 ) {
     OutlinedTextField(
@@ -194,7 +201,18 @@ private fun LevelField(
 fun AddNewPreview() {
     PokeBaseTheme {
         AddNewPokemonScreen(
-            viewModel = AddNewPokemonViewModel(),
+            viewModel = AddNewPokemonViewModel(
+                object : GetSpeciesUseCase {
+                    override suspend fun getSpecies(): Result<List<SpeciesShort>> {
+                        return Result.success(emptyList())
+                    }
+                },
+                addPokemonUseCase = object : AddPokemonUseCase {
+                    override suspend fun submit(pokemonData: PokemonData): Result<String> {
+                        return Result.success("Pog")
+                    }
+                }
+            ),
             navController = rememberNavController()
         )
     }

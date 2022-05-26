@@ -4,18 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import ru.frozenpriest.pokebase.domain.model.Category
 import ru.frozenpriest.pokebase.domain.model.Move
 import ru.frozenpriest.pokebase.domain.model.Pokemon
-import ru.frozenpriest.pokebase.domain.model.Species
-import ru.frozenpriest.pokebase.domain.model.Stat
-import ru.frozenpriest.pokebase.domain.model.Type
+import ru.frozenpriest.pokebase.domain.pokemon.GetDamageUseCase
+import ru.frozenpriest.pokebase.domain.pokemon.GetPokemonDetailsUseCase
 import javax.inject.Inject
 
 @Suppress("UnusedPrivateMember", "LongMethod")
 class PokemonBattleViewModel @Inject constructor(
-    //
+    private val getPokemonDetailsUseCase: GetPokemonDetailsUseCase,
+    private val getDamageUseCase: GetDamageUseCase
 ) : ViewModel() {
     private val _pokemons = MutableLiveData<Pair<PokemonInBattle, PokemonInBattle>>()
     val pokemons: LiveData<Pair<PokemonInBattle, PokemonInBattle>> get() = _pokemons
@@ -30,82 +30,39 @@ class PokemonBattleViewModel @Inject constructor(
 
     fun loadPokemon(id1: String, id2: String) {
         viewModelScope.launch {
-            _pokemons.postValue(
-                PokemonInBattle(
-                    24,
-                    Pokemon(
-                        id = "r3r32r3r",
-                        name = "Poke333",
-                        species = Species(
-                            name = "Bulbasaur333",
-                            hp = Stat.makeHP(85),
-                            attack = Stat.makeAttack(10),
-                            defence = Stat.makeDefence(20),
-                            spAttack = Stat.makeSpAttack(20),
-                            spDefence = Stat.makeSpDefence(20),
-                            speed = Stat.makeSpeed(20),
-                            types = listOf(Type.Grass, Type.Poison),
-                            possibleEvolutions = listOf(),
-                            height = 70,
-                            weight = 6.9f,
-                            image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-                        ),
-                        level = 5,
+            val first = async {
+                val result = getPokemonDetailsUseCase.getPokemonDetails(id1)
+                val pokemon = result.getOrThrow()
+                PokemonInBattle(pokemon.stats.hp.value, pokemon)
+            }
+            val second = async {
+                val result = getPokemonDetailsUseCase.getPokemonDetails(id2)
+                val pokemon = result.getOrThrow()
+                PokemonInBattle(pokemon.stats.hp.value, pokemon)
+            }
 
-                        moves = listOf(
-                            Move("LUL", Type.Poison, Category.Status, null, 1.0f, 999),
-                            Move("LUL2", Type.Rock, Category.Physical, 8888, 0.0f, 1),
-                            Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33)
-                        )
-                    )
-                )
-                    to
-                        PokemonInBattle(
-                            99,
-                            Pokemon(
-                                id = "r3r32r3r",
-                                name = "Poke333",
-                                species = Species(
-                                    name = "Bulbasaur333",
-                                    hp = Stat.makeHP(85),
-                                    attack = Stat.makeAttack(10),
-                                    defence = Stat.makeDefence(20),
-                                    spAttack = Stat.makeSpAttack(20),
-                                    spDefence = Stat.makeSpDefence(20),
-                                    speed = Stat.makeSpeed(20),
-                                    types = listOf(Type.Grass, Type.Poison),
-                                    possibleEvolutions = listOf(),
-                                    height = 70,
-                                    weight = 6.9f,
-                                    image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-                                ),
-                                level = 5,
-
-                                moves = listOf(
-                                    Move(
-                                        "LUL_other",
-                                        Type.Poison,
-                                        Category.Status,
-                                        null,
-                                        1.0f,
-                                        999
-                                    ),
-                                    Move("LUL2_other", Type.Rock, Category.Physical, 8888, 0.0f, 1),
-                                    Move("LUL3", Type.Dragon, Category.Special, 7777, 0.35f, 33)
-                                )
-                            )
-                        )
-            )
+            _pokemons.postValue(first.await() to second.await())
         }
     }
 
-    fun calculateDamage(move: Move) {
-        val damage = 5
+    fun calculateDamage(move: Move) = viewModelScope.launch {
         pokemons.value?.let {
             if (turn.value == true) {
-                _pokemons.postValue(it.first to it.second.copy(hp = it.second.hp - damage))
+                val damage = getDamageUseCase.calculateDamage(
+                    it.first.pokemon.id.toInt(),
+                    it.second.pokemon.id.toInt(),
+                    move.id.toInt()
+                )
+
+                _pokemons.postValue(it.first to it.second.copy(hp = it.second.hp - damage.getOrThrow()))
             } else {
-                _pokemons.postValue(it.first.copy(hp = it.first.hp - damage) to it.second)
+                val damage = getDamageUseCase.calculateDamage(
+                    it.second.pokemon.id.toInt(),
+                    it.first.pokemon.id.toInt(),
+                    move.id.toInt()
+                )
+
+                _pokemons.postValue(it.first.copy(hp = it.first.hp - damage.getOrThrow()) to it.second)
             }
         }
     }

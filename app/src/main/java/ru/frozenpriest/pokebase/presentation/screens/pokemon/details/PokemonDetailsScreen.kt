@@ -83,7 +83,9 @@ fun PokemonDetailsScreen(
     navController: NavController,
     pokemonId: String
 ) {
-    viewModel.setId(pokemonId)
+    LaunchedEffect(key1 = null) {
+        viewModel.loadPokemon(pokemonId)
+    }
     val selectedPokemon = viewModel.selectedPokemon.observeAsState()
     selectedPokemon.value?.let { pokemon ->
         var dominantColor by remember {
@@ -124,7 +126,7 @@ fun PokemonDetailsScreen(
                             navController.navigate(
                                 NavigationDestination.PokemonBattle.destination.withTwoPokemon(
                                     selectedPokemon.value!!.id,
-                                    it.id
+                                    it
                                 )
                             )
                         },
@@ -138,7 +140,7 @@ fun PokemonDetailsScreen(
 
 @Composable
 fun BoxScope.SelectOpponentAlert(
-    onPokemonSelected: (Pokemon) -> Unit,
+    onPokemonSelected: (String) -> Unit,
     viewModel: PokemonDetailsViewModel
 ) {
     Card(
@@ -158,7 +160,7 @@ fun BoxScope.SelectOpponentAlert(
                     modifier = Modifier.padding(8.dp),
                     pokemon = pokemon
                 ) {
-                    onPokemonSelected(pokemon)
+                    onPokemonSelected(pokemon.id)
                 }
             }
         }

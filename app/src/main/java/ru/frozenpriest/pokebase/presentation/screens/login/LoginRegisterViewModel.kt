@@ -7,12 +7,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import ru.frozenpriest.pokebase.data.local.DataStoreRepository
 import ru.frozenpriest.pokebase.domain.login.LoginRegisterUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
 class LoginRegisterViewModel @Inject constructor(
-    private val loginRegisterUseCase: LoginRegisterUseCase
+    private val loginRegisterUseCase: LoginRegisterUseCase,
+    private val dataStoreRepository: DataStoreRepository
 ) : ViewModel() {
     private val _token = MutableLiveData<String>()
     val token: LiveData<String> get() = _token
@@ -27,6 +29,7 @@ class LoginRegisterViewModel @Inject constructor(
         token.onSuccess {
             Timber.d("Got token: $it")
             _token.value = it
+            dataStoreRepository.setBearerToken(it)
         }
         token.onFailure {
             Timber.d("Got error: $it")

@@ -4,17 +4,24 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.frozenpriest.pokebase.domain.model.Species
-import ru.frozenpriest.pokebase.domain.model.Stat
-import ru.frozenpriest.pokebase.domain.model.Type
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import ru.frozenpriest.pokebase.domain.model.SpeciesShort
+import ru.frozenpriest.pokebase.domain.pokemon.AddPokemonUseCase
+import ru.frozenpriest.pokebase.domain.pokemon.GetSpeciesUseCase
+import ru.frozenpriest.pokebase.domain.pokemon.PokemonData
+import timber.log.Timber
 import javax.inject.Inject
 
-class AddNewPokemonViewModel @Inject constructor() : ViewModel() {
-    private val _selectedPokemon = MutableLiveData(PokemonData())
-    val selectedPokemon: LiveData<PokemonData> get() = _selectedPokemon
+class AddNewPokemonViewModel @Inject constructor(
+    private val getSpeciesUseCase: GetSpeciesUseCase,
+    private val addPokemonUseCase: AddPokemonUseCase
+) : ViewModel() {
+    private val _selectedPokemon = MutableLiveData(PokemonDataNullable())
+    val selectedPokemon: LiveData<PokemonDataNullable> get() = _selectedPokemon
 
-    private val _species = MutableLiveData<List<Species>>()
-    val species: LiveData<List<Species>> get() = _species
+    private val _species = MutableLiveData<List<SpeciesShort>>()
+    val species: LiveData<List<SpeciesShort>> get() = _species
 
     val readyToCreate = MediatorLiveData<Boolean>().apply {
         addSource(_selectedPokemon) {
@@ -25,430 +32,14 @@ class AddNewPokemonViewModel @Inject constructor() : ViewModel() {
     private val _status = MutableLiveData(Status.Ready)
     val status: LiveData<Status> get() = _status
 
-    init {
-        _species.value = listOf(
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
-            Species(
-                name = "Bulbasaur",
-                hp = Stat.makeHP(85),
-                attack = Stat.makeAttack(10),
-                defence = Stat.makeDefence(20),
-                spAttack = Stat.makeSpAttack(20),
-                spDefence = Stat.makeSpDefence(20),
-                speed = Stat.makeSpeed(20),
-                height = 70,
-                weight = 6.9f,
-                types = listOf(Type.Grass, Type.Poison),
-                possibleEvolutions = listOf(),
-                image = "https://archives.bulbagarden.net/media/upload/2/21/001Bulbasaur.png",
-            ),
+    fun getSpecies() = viewModelScope.launch {
+        Timber.i("Loading species")
+        val result = getSpeciesUseCase.getSpecies()
+        Timber.i("Got species, result is $result")
 
-        )
+        result.onSuccess {
+            _species.postValue(it)
+        }
     }
 
     fun setName(name: String) {
@@ -462,24 +53,35 @@ class AddNewPokemonViewModel @Inject constructor() : ViewModel() {
         _selectedPokemon.value = _selectedPokemon.value?.copy(level = level)
     }
 
-    fun setSpecies(species: Species) {
+    fun setSpecies(species: SpeciesShort) {
         _selectedPokemon.value = _selectedPokemon.value?.copy(species = species)
     }
 
-    fun submitPokemon() {
-        _status.value = Status.Waiting
-        // submits pokemon
-
-        // then set status to true after result
-        _status.value = Status.Success
+    fun submitPokemon() = viewModelScope.launch {
+        val pokemonData = _selectedPokemon.value
+        if (pokemonData?.species != null && pokemonData.level != null && pokemonData.name != null) {
+            _status.value = Status.Waiting
+            // submits pokemon
+            val result = addPokemonUseCase.submit(
+                PokemonData(
+                    pokemonData.name,
+                    pokemonData.level,
+                    pokemonData.species
+                )
+            )
+            result.onSuccess {
+                _status.value = Status.Success
+            }
+        }
     }
 }
 
-data class PokemonData(
-    val name: String? = null,
-    val level: Int? = null,
-    val species: Species? = null
-)
 enum class Status {
     Ready, Waiting, Success
 }
+
+data class PokemonDataNullable(
+    val name: String? = null,
+    val level: Int? = null,
+    val species: SpeciesShort? = null
+)

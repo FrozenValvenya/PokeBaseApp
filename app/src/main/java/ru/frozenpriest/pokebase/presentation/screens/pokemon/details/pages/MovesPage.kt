@@ -183,8 +183,9 @@ fun MovesRow(modifier: Modifier, move: Move, onClick: (() -> Unit)? = null) {
             maxLines = 1,
             modifier = Modifier.weight(1f)
         )
+        val acc = if (move.accuracy != null) (move.accuracy)?.toInt().toString() + " %" else ""
         Text(
-            text = (move.accuracy * 100).toInt().toString() + " %",
+            text = acc,
             Modifier.weight(1f),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
