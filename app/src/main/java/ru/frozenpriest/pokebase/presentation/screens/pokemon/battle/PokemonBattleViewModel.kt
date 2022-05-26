@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import ru.frozenpriest.pokebase.domain.model.Category
 import ru.frozenpriest.pokebase.domain.model.Move
 import ru.frozenpriest.pokebase.domain.model.Pokemon
 import ru.frozenpriest.pokebase.domain.pokemon.GetDamageUseCase
@@ -46,6 +47,8 @@ class PokemonBattleViewModel @Inject constructor(
     }
 
     fun calculateDamage(move: Move) = viewModelScope.launch {
+        if (move.category == Category.Status) return@launch
+
         pokemons.value?.let {
             if (turn.value == true) {
                 val damage = getDamageUseCase.calculateDamage(
