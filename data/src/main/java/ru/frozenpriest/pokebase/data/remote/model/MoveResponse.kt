@@ -1,6 +1,9 @@
 package ru.frozenpriest.pokebase.data.remote.model
 
 import kotlinx.serialization.Serializable
+import ru.frozenpriest.pokebase.domain.model.Category
+import ru.frozenpriest.pokebase.domain.model.Move
+import ru.frozenpriest.pokebase.domain.model.Type
 
 @Serializable
 data class MoveResponse(
@@ -13,3 +16,15 @@ data class MoveResponse(
     val pp: Int,
     val description: String
 )
+
+fun MoveResponse.toMove(): Move {
+    return Move(
+        id = moveId.toString(),
+        name = name,
+        type = Type.valueOf(type),
+        category = Category.valueOf(category),
+        power = power,
+        accuracy = accuracy?.toFloat(),
+        pp = pp
+    )
+}

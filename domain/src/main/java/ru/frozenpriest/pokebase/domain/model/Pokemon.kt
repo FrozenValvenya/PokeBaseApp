@@ -1,10 +1,5 @@
 package ru.frozenpriest.pokebase.domain.model
 
-import ru.frozenpriest.pokebase.data.remote.model.PokemonResponse
-import ru.frozenpriest.pokebase.data.remote.model.SpeciesResponse
-import ru.frozenpriest.pokebase.data.remote.model.SpeciesShortResponse
-import ru.frozenpriest.pokebase.data.remote.model.StatsResponse
-
 data class Pokemon(
     val id: String,
     val name: String,
@@ -13,17 +8,6 @@ data class Pokemon(
     val moves: List<Move>,
     val stats: Stats,
 )
-
-fun PokemonResponse.toPokemon(): Pokemon {
-    return Pokemon(
-        this.pokemonId.toString(),
-        this.nickname,
-        this.level,
-        this.species.toSpecies(),
-        this.moves.map { it.toMove() },
-        this.stats.toStats()
-    )
-}
 
 data class Species(
     val id: String,
@@ -37,35 +21,12 @@ data class Species(
     val image: String
 )
 
-fun SpeciesResponse.toSpecies(): Species {
-    return Species(
-        this.speciesId.toString(),
-        this.name,
-        listOfNotNull(primaryType, secondaryType).map { Type.valueOf(it) },
-        this.evolutions.map { it.toSpecies() },
-        this.weight,
-        this.height,
-        this.baseStats.toStats(),
-        this.movePool.map { it.toMove() },
-        this.image
-    )
-}
-
 data class SpeciesShort(
     val speciesId: String,
     val name: String,
     val types: List<Type>,
     val image: String
 )
-
-fun SpeciesShortResponse.toShort(): SpeciesShort {
-    return SpeciesShort(
-        speciesId = speciesId,
-        name = name,
-        types = listOfNotNull(primaryType, secondaryType).map { Type.valueOf(it) },
-        image = image
-    )
-}
 
 data class Stats(
     val hp: Stat,
@@ -75,17 +36,6 @@ data class Stats(
     val spd: Stat,
     val spe: Stat
 )
-
-fun StatsResponse.toStats(): Stats {
-    return Stats(
-        Stat.makeHP(this.hp),
-        Stat.makeAttack(atk),
-        Stat.makeDefence(def),
-        Stat.makeSpAttack(spa),
-        Stat.makeSpDefence(spd),
-        Stat.makeSpeed(spe)
-    )
-}
 
 fun Species.getStats(): List<Stat> {
     return listOf(

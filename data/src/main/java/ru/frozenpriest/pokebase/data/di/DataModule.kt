@@ -14,10 +14,10 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import ru.frozenpriest.pokebase.data.local.DataStoreRepository
 import ru.frozenpriest.pokebase.data.local.DataStoreRepositoryImpl
-import ru.frozenpriest.pokebase.data.remote.RemoteRepository
 import ru.frozenpriest.pokebase.data.remote.RemoteRepositoryImpl
+import ru.frozenpriest.pokebase.domain.DataStoreRepository
+import ru.frozenpriest.pokebase.domain.RemoteRepository
 
 @Module
 internal class DataModule {

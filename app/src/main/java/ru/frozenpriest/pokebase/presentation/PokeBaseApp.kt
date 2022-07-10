@@ -5,9 +5,9 @@ import ru.frozenpriest.pokebase.BuildConfig
 import ru.frozenpriest.pokebase.data.di.DataComponentHolder
 import ru.frozenpriest.pokebase.data.di.DataFeatureApi
 import ru.frozenpriest.pokebase.data.di.DataFeatureDependencies
-import ru.frozenpriest.pokebase.data.local.DataStoreRepository
 import ru.frozenpriest.pokebase.di.AppComponentHolder
 import ru.frozenpriest.pokebase.di.AppFeatureDependencies
+import ru.frozenpriest.pokebase.domain.DataStoreRepository
 import ru.frozenpriest.pokebase.domain.di.DomainComponentHolder
 import ru.frozenpriest.pokebase.domain.di.DomainFeatureApi
 import ru.frozenpriest.pokebase.domain.di.DomainFeatureDependencies
