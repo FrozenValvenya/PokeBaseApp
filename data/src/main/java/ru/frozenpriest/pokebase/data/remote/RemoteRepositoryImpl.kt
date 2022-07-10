@@ -24,25 +24,24 @@ import ru.frozenpriest.pokebase.data.remote.model.PokemonShortResponse
 import ru.frozenpriest.pokebase.data.remote.model.SpeciesShortResponse
 import ru.frozenpriest.pokebase.data.remote.model.TokenResponse
 import ru.frozenpriest.pokebase.data.remote.model.Username
+import ru.frozenpriest.pokebase.data.remote.model.toMove
+import ru.frozenpriest.pokebase.data.remote.model.toPokemon
+import ru.frozenpriest.pokebase.data.remote.model.toPokemonShort
+import ru.frozenpriest.pokebase.data.remote.model.toShort
+import ru.frozenpriest.pokebase.data.remote.model.toToken
+import ru.frozenpriest.pokebase.domain.RemoteRepository
+import ru.frozenpriest.pokebase.domain.model.Move
+import ru.frozenpriest.pokebase.domain.model.Pokemon
+import ru.frozenpriest.pokebase.domain.model.PokemonShort
+import ru.frozenpriest.pokebase.domain.model.SpeciesShort
+import ru.frozenpriest.pokebase.domain.model.Token
+import ru.frozenpriest.pokebase.domain.pokemon.PokemonData
 import javax.inject.Inject
-
-interface RemoteRepository {
-    suspend fun login(login: String, password: String): Result<TokenResponse>
-    suspend fun register(login: String, password: String): Result<TokenResponse>
-    suspend fun getOwnedPokemon(): Result<List<PokemonShortResponse>>
-    suspend fun getMoves(speciesId: String): Result<List<MoveResponse>>
-    suspend fun getPokemonDetails(pokemonId: String): Result<PokemonResponse>
-    suspend fun getSpecies(): Result<List<SpeciesShortResponse>>
-    suspend fun submitNewPokemon(pokemonData: PokemonDataRequest): Result<String>
-    suspend fun addMove(pokemonId: String, moveId: String): Result<String>
-    suspend fun removeMove(pokemonId: String, moveId: String): Result<String>
-    suspend fun getDamage(damageRequest: DamageRequest): Result<Int>
-}
 
 class RemoteRepositoryImpl @Inject constructor(
     private val client: HttpClient
 ) : RemoteRepository {
-    override suspend fun login(login: String, password: String): Result<TokenResponse> {
+    override suspend fun login(login: String, password: String): Result<Token> {
         return try {
             Result.success(
                 client.post {
@@ -50,87 +49,93 @@ class RemoteRepositoryImpl @Inject constructor(
 
                     contentType(ContentType.Application.Json)
                     setBody(Credentials(Username(login), Password(password)))
-                }.body()
+                }.body<TokenResponse>().toToken()
             )
         } catch (e: ResponseException) {
             Result.failure(e)
         }
     }
 
-    override suspend fun register(login: String, password: String): Result<TokenResponse> {
+    override suspend fun register(login: String, password: String): Result<Token> {
         return try {
             Result.success(
                 client.post {
                     url(HttpRoutes.REGISTER_URL)
                     contentType(ContentType.Application.Json)
                     setBody(Credentials(Username(login), Password(password)))
-                }.body()
+                }.body<TokenResponse>().toToken()
             )
         } catch (e: ResponseException) {
             Result.failure(e)
         }
     }
 
-    override suspend fun getOwnedPokemon(): Result<List<PokemonShortResponse>> {
+    override suspend fun getOwnedPokemon(): Result<List<PokemonShort>> {
         return try {
             Result.success(
                 client.get {
                     url(HttpRoutes.OWNED_POKEMON)
                     contentType(ContentType.Application.Json)
-                }.body()
+                }.body<List<PokemonShortResponse>>().map { it.toPokemonShort() }
             )
         } catch (e: ResponseException) {
             Result.failure(e)
         }
     }
 
-    override suspend fun getMoves(speciesId: String): Result<List<MoveResponse>> {
+    override suspend fun getMoves(speciesId: String): Result<List<Move>> {
         return try {
             Result.success(
                 client.get {
                     url(HttpRoutes.getMovesRoute(speciesId))
                     contentType(ContentType.Application.Json)
-                }.body()
+                }.body<List<MoveResponse>>().map { it.toMove() }
             )
         } catch (e: ResponseException) {
             Result.failure(e)
         }
     }
 
-    override suspend fun getPokemonDetails(pokemonId: String): Result<PokemonResponse> {
+    override suspend fun getPokemonDetails(pokemonId: String): Result<Pokemon> {
         return try {
             Result.success(
                 client.get {
                     url(HttpRoutes.getPokemonDetailsRoute(pokemonId))
                     contentType(ContentType.Application.Json)
-                }.body()
+                }.body<PokemonResponse>().toPokemon()
             )
         } catch (e: ResponseException) {
             Result.failure(e)
         }
     }
 
-    override suspend fun getSpecies(): Result<List<SpeciesShortResponse>> {
+    override suspend fun getSpecies(): Result<List<SpeciesShort>> {
         return try {
             Result.success(
                 client.get {
                     url(HttpRoutes.SPECIES_URL)
                     contentType(ContentType.Application.Json)
-                }.body()
+                }.body<List<SpeciesShortResponse>>().map { it.toShort() }
             )
         } catch (e: ResponseException) {
             Result.failure(e)
         }
     }
 
-    override suspend fun submitNewPokemon(pokemonData: PokemonDataRequest): Result<String> {
+    override suspend fun submitNewPokemon(pokemonData: PokemonData): Result<String> {
         return try {
             Result.success(
                 client.put {
                     url(HttpRoutes.ADD_POKEMON)
 
                     contentType(ContentType.Application.Json)
-                    setBody(pokemonData)
+                    setBody(
+                        PokemonDataRequest(
+                            pokemonData.name,
+                            pokemonData.level,
+                            pokemonData.species.speciesId.toInt()
+                        )
+                    )
                 }.body<PokemonIdResponse>().pokemonId.toString()
             )
         } catch (e: ResponseException) {
@@ -168,14 +173,14 @@ class RemoteRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getDamage(damageRequest: DamageRequest): Result<Int> {
+    override suspend fun getDamage(attackerId: Int, defenderId: Int, moveId: Int): Result<Int> {
         return try {
             Result.success(
                 client.post {
                     url(HttpRoutes.DAMAGE)
 
                     contentType(ContentType.Application.Json)
-                    setBody(damageRequest)
+                    setBody(DamageRequest(attackerId, defenderId, moveId))
                 }.body<DamageResponse>().damage
             )
         } catch (e: ResponseException) {

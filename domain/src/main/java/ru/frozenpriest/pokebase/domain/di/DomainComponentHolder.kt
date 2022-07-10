@@ -1,6 +1,6 @@
 package ru.frozenpriest.pokebase.domain.di
 
-import ru.frozenpriest.pokebase.data.remote.RemoteRepository
+import ru.frozenpriest.pokebase.domain.RemoteRepository
 import ru.frozenpriest.pokebase.domain.login.LoginRegisterUseCase
 import ru.frozenpriest.pokebase.domain.pokemon.AddPokemonUseCase
 import ru.frozenpriest.pokebase.domain.pokemon.GetDamageUseCase

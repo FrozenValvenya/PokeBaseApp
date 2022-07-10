@@ -1,8 +1,8 @@
 package ru.frozenpriest.pokebase.data.di
 
 import android.app.Application
-import ru.frozenpriest.pokebase.data.local.DataStoreRepository
-import ru.frozenpriest.pokebase.data.remote.RemoteRepository
+import ru.frozenpriest.pokebase.domain.DataStoreRepository
+import ru.frozenpriest.pokebase.domain.RemoteRepository
 import ru.frozenpriest.pokebase.injector.BaseFeatureAPI
 import ru.frozenpriest.pokebase.injector.BaseFeatureDependencies
 import ru.frozenpriest.pokebase.injector.ComponentHolder

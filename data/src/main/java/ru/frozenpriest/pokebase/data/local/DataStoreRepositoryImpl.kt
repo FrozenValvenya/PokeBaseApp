@@ -6,12 +6,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.first
+import ru.frozenpriest.pokebase.domain.DataStoreRepository
 import javax.inject.Inject
-
-interface DataStoreRepository {
-    suspend fun getBearerToken(): String
-    suspend fun setBearerToken(token: String)
-}
 
 val Context.dataStore by preferencesDataStore("poke_datastore")
 

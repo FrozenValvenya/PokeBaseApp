@@ -1,7 +1,6 @@
 package ru.frozenpriest.pokebase.domain.pokemon
 
-import ru.frozenpriest.pokebase.data.remote.RemoteRepository
-import ru.frozenpriest.pokebase.data.remote.model.DamageRequest
+import ru.frozenpriest.pokebase.domain.RemoteRepository
 import javax.inject.Inject
 
 interface GetDamageUseCase {
@@ -20,6 +19,6 @@ class GetDamageUseCaseImpl @Inject constructor(
         defenderId: Int,
         moveId: Int
     ): Result<Int> {
-        return pokeBaseRepository.getDamage(DamageRequest(attackerId, defenderId, moveId))
+        return pokeBaseRepository.getDamage(attackerId, defenderId, moveId)
     }
 }

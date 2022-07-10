@@ -1,6 +1,8 @@
 package ru.frozenpriest.pokebase.data.remote.model
 
 import kotlinx.serialization.Serializable
+import ru.frozenpriest.pokebase.domain.model.PokemonShort
+import ru.frozenpriest.pokebase.domain.model.Type
 
 @Serializable
 data class PokemonShortResponse(
@@ -18,3 +20,13 @@ data class SpeciesShortResponse(
     val secondaryType: String?,
     val image: String
 )
+
+fun PokemonShortResponse.toPokemonShort(): PokemonShort {
+    return PokemonShort(
+        id = pokemonId,
+        name = nickname,
+        speciesName = species.name,
+        imageUrl = species.image,
+        types = listOfNotNull(species.primaryType, species.secondaryType).map { Type.valueOf(it) }
+    )
+}

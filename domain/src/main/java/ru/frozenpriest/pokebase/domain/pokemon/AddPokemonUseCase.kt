@@ -1,7 +1,6 @@
 package ru.frozenpriest.pokebase.domain.pokemon
 
-import ru.frozenpriest.pokebase.data.remote.RemoteRepository
-import ru.frozenpriest.pokebase.data.remote.model.PokemonDataRequest
+import ru.frozenpriest.pokebase.domain.RemoteRepository
 import ru.frozenpriest.pokebase.domain.model.SpeciesShort
 import javax.inject.Inject
 
@@ -13,13 +12,7 @@ class AddPokemonUseCaseImpl @Inject constructor(
     private val pokeBaseRepository: RemoteRepository
 ) : AddPokemonUseCase {
     override suspend fun submit(pokemonData: PokemonData): Result<String> {
-        return pokeBaseRepository.submitNewPokemon(
-            PokemonDataRequest(
-                pokemonData.name,
-                pokemonData.level,
-                pokemonData.species.speciesId.toInt()
-            )
-        )
+        return pokeBaseRepository.submitNewPokemon(pokemonData)
     }
 }
 

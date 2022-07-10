@@ -1,7 +1,7 @@
 package ru.frozenpriest.pokebase.di
 
 import dagger.Component
-import ru.frozenpriest.pokebase.data.local.DataStoreRepository
+import ru.frozenpriest.pokebase.domain.DataStoreRepository
 import javax.inject.Singleton
 
 @Component(

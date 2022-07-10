@@ -3,7 +3,7 @@ package ru.frozenpriest.pokebase.domain.login
 import android.accounts.NetworkErrorException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import ru.frozenpriest.pokebase.data.remote.RemoteRepository
+import ru.frozenpriest.pokebase.domain.RemoteRepository
 import javax.inject.Inject
 
 interface LoginRegisterUseCase {
