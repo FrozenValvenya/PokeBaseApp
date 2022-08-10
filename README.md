@@ -1,4 +1,4 @@
-#Project details:
+# Project details:
 
 
 Multimodule project - pokemon database with the ability to simulate battles between them. Uses [Ktor-server](https://github.com/valvenya/PokeBaseAPI) as backend
