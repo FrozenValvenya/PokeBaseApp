@@ -1,19 +1,29 @@
 Project details:
 * multimodule
+
+
 di 
-* dagger 
+* dagger
+
+
 UI
 * jetpack compose
 * navigation-compose
 * accompanist
 * coil
 * mvvm
+
+
 Data
 * ktor-client
 * datastore 
+
+
 Code smells
 * ktlint
 * detekt
+
+
 Logging
 * timber
 
